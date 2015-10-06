@@ -1,0 +1,12 @@
+body {
+    background-color: #ddddff;
+}
+
+div {
+    width: 100%;
+}
+#body {
+    background-color: #ffddff;
+    font-size: 55px;
+    height: 500px;
+}

@@ -12,7 +12,7 @@
         body {
         }
         .welcome {
-            height: 450px;
+            height: 400px;
             background-color: #CCCCCC;
             padding: 40px 15px;
             text-align: center;
@@ -54,7 +54,7 @@
         <div class="container">
             <h3>From russian with love. This is also a footer.</h3>
             <span class="label label-success">
-                &pi; <?php echo $total_time = round((microtime(TRUE)-$_SERVER['REQUEST_TIME_FLOAT']), 4); ?>
+                &pi; <?php echo round((microtime(TRUE)-$_SERVER['REQUEST_TIME_FLOAT']), 4); ?>
             </span>
         </div>
     </footer>

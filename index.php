@@ -17,11 +17,6 @@
             padding: 40px 15px;
             text-align: center;
         }
-        .container-maxwidth {
-            width: 100%;
-            padding-left: 0;
-            padding-right: 0;
-        }
     </style>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </head>
@@ -52,7 +47,7 @@
     </div>
     <footer>
         <div class="container">
-            <h3>From russian with love. This is also a footer.</h3>
+            <h3>From Russia with love. This is also a footer.</h3>
             <span class="label label-success">
                 &pi; <?php echo round((microtime(TRUE)-$_SERVER['REQUEST_TIME_FLOAT']), 4); ?>
             </span>

@@ -5,11 +5,15 @@
     <!-- Hey Internet Explorer: Fuck you. Sincerely, everyone. -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>tattoofrei.de</title>
+    <title>tattooliste.de</title>
     <link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="./bootstrap/css/bootstrap-theme.min.css">
     <style>
         body {
+        }
+        #map {
+            width: 100%;
+            height: 400px;
         }
         .welcome {
             height: 400px;
@@ -18,22 +22,37 @@
             text-align: center;
         }
         .hovercraft {
-            max-width: 750px;
+            max-width: 550px;
             margin-left: auto;
             margin-right: auto;
             padding: 15px;
-            background-color: white;
+            position: relative;
+            bottom: 125px;
         }
         .jumbotron {
             background-color: #fafafa;
         }
     </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
     <script src="./bootstrap/js/bootstrap.min.js"></script>
+    <script>
+        function initialize() {
+            var mapCanvas = document.getElementById('map');
+            var mapOptions = {
+                center: new google.maps.LatLng(52.52001, 13.40495),
+                zoom: 12,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            }
+            var map = new google.maps.Map(mapCanvas, mapOptions)
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
 </head>
 <body>
-    <header class="navbar">
+    <header class="navbar navbar-default">
         <div class="container">
-            <div id="navbar" class="collapse navbar-collapse">
+            <div id="navbar-header" class="collapse navbar-collapse">
                 <a class="navbar-brand" href="#"><span class="glyphicon glyphicon-text-background"></span></a>
                 <a class="navbar-brand" href="#">tattoliste.de</a>
                 <ul class="nav navbar-nav">
@@ -45,15 +64,17 @@
     </header>
     <div class="container-fluid">
         <div class="row">
-            <div class="welcome">
-                <h1>Super coole GMap</h1>
-                <div class="hovercraft">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            Lorem
-                        </div>
-                        <div class="col-lg-6">
-                            Ipsum
+            <div id="map_wrapper" style="display: block;">
+                <div id="map"></div>
+            </div>
+            <div class="hovercraft">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">Adresse</span>
+                                <input type="text" class="form-control" id="inputDefault">
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -7,79 +7,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>tattooliste.de</title>
     <link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./bootstrap/css/bootstrap-theme.min.css">
-    <style>
-        body {
-        }
-        #map {
-            width: 100%;
-            height: 400px;
-        }
-        .welcome {
-            height: 400px;
-            background-color: #CCCCCC;
-            padding: 40px 15px;
-            text-align: center;
-        }
-        .hovercraft {
-            max-width: 550px;
-            margin-left: auto;
-            margin-right: auto;
-            padding: 15px;
-            position: relative;
-            bottom: 125px;
-        }
-        .jumbotron {
-            background-color: #fafafa;
-        }
-    </style>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="./bootstrap/js/bootstrap.min.js"></script>
+    <script src="./bootstrap/js/transition.js"></script>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body>
-<nav class="navbar navbar-default">
-    <div class="container">
-        <div id="navbar-header" class="collapse navbar-collapse">
-            <a class="navbar-brand" href="#"><span class="glyphicon glyphicon-text-background"></span></a>
-            <a class="navbar-brand" href="#">tattoliste.de</a>
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Karte</a></li>
-                <li><a href="#">Bruh</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<?php include 'nav.php';?>
 <div class="container-fluid">
     <div class="row">
         <div class="container">
-            <form class="form-horizontal">
+            <form class="form-horizontal" action="form_response.php" method="post">
                 <fieldset>
                     <legend>Ein neues Studio registrieren:</legend>
                     <div class="form-group">
                         <label for="Name" class="col-lg-2 control-label">Name</label>
                         <div class="col-lg-10">
-                            <input class="form-control" id="Name" placeholder="Studioname" type="text">
+                            <input class="form-control" id="Name" placeholder="Studioname" type="text" name="studioName" required>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="Ort" class="col-lg-2 control-label">Plz Ort</label>
                         <div class="col-lg-10">
-                            <input class="form-control" id="Ort" placeholder="Postleitzahl Ort" type="text">
+                            <input class="form-control" id="Ort" placeholder="Postleitzahl Ort" type="text" name="studioLocation" required>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="Stra�e" class="col-lg-2 control-label">Anschrift (Str., Hausnummer)</label>
+                        <label for="Straße" class="col-lg-2 control-label">Anschrift</label>
                         <div class="col-lg-10">
-                            <input class="form-control" id="Stra�e" placeholder="Stra&szlig;e Hausnummer" type="text">
+                            <input class="form-control" id="Straße" placeholder="Stra&szlig;e Hausnummer" type="text" name="studioAddress" required>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="Submitter" class="col-lg-2 control-label">Eingetragen als</label>
                         <div class="col-lg-10">
-                            <select class="form-control" id="select">
-                                <option>Studio Inhaber</option>
-                                <option>Gast</option>
-                                <option>Anonym</option>
+                            <select class="form-control accordion-dropdown" id="select" name="submitType">
+                                <option value="withAddress studio">Studio Inhaber</option>
+                                <option selected="selected" value="withAddress user">Gast</option>
+                                <option value="withoutAddress">Anonym</option>
                             </select>
+                        </div>
+                    </div>
+                    <div class="accordion" id="accordion">
+                        <div class="accordion-group">
+                            <div class="panel-collapse collapse in" id="collapseExample">
+                                <div class="form-group">
+                                    <label for="Name" class="col-lg-2 control-label">Name</label>
+                                    <div class="col-lg-10">
+                                        <input class="form-control" id="Name" placeholder="Name / Kürzel" type="text" name="userName">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Ort" class="col-lg-2 control-label">Plz Ort</label>
+                                    <div class="col-lg-10">
+                                        <input class="form-control" id="Ort" placeholder="Postleitzahl Ort" type="text" name="userLocation">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Straße" class="col-lg-2 control-label">Anschrift</label>
+                                    <div class="col-lg-10">
+                                        <input class="form-control" id="Straße" placeholder="Straße Hausnummer" type="text" name="userAddress">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Ort" class="col-lg-2 control-label"></label>
+                            <div class="col-lg-10">
+                                <div class="g-recaptcha" data-size="normal" data-sitekey="6Ldahw8TAAAAAA_WVGzpXB9oRwILwfyjeppNfDOl"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 text-right">
+                            <button type="reset" class="btn btn-warning">Reset</button>
+                            <button type="submit" class="btn btn-primary submit" value="send">Absenden</button>
                         </div>
                     </div>
                 </fieldset>
@@ -87,21 +89,26 @@
         </div>
     </div>
 </div>
-<footer class="panel-footer">
-    <div class="row">
-        <div class="col-lg-12">
-            <ul class="list-inline">
-                <li><a href="#">Kontakt</a></li>
-                <li><a href="#">Werte</a></li>
-                <li><a href="#">Impressum</a></li>
-            </ul>
-            <p>From Russia with love. This is also a footer.
-                <span class="label label-success">
-                    &pi; <?php echo round((microtime(TRUE)-$_SERVER['REQUEST_TIME_FLOAT']), 4); ?>
-                </span>
-            </p>
-        </div>
-    </div>
-</footer>
+<?php include 'footer.php';?>
 </body>
+<script>
+    $( document ).ready(function() {
+
+        $(".alert").find(".close").on("click", function (e) {
+            // Find all elements with the "alert" class, get all descendant elements with the class "close", and bind a "click" event handler
+            e.stopPropagation();    // Don't allow the click to bubble up the DOM
+            e.preventDefault();    // Don't let any default functionality occur (in case it's a link)
+            $(this).closest(".alert").slideUp(400);    // Hide this specific Alert
+        });
+
+
+        $("#select").change(function(){
+            if ( $(this).val().indexOf("withAddress") != -1){
+                $('#collapseExample').collapse('show');
+            } else {
+                $('#collapseExample').collapse('hide');
+            }
+        })
+    });
+</script>
 </html>

@@ -50,7 +50,7 @@
     </script>
 </head>
 <body>
-    <header class="navbar navbar-default">
+    <nav class="navbar navbar-default">
         <div class="container">
             <div id="navbar-header" class="collapse navbar-collapse">
                 <a class="navbar-brand" href="#"><span class="glyphicon glyphicon-text-background"></span></a>
@@ -61,7 +61,7 @@
                 </ul>
             </div>
         </div>
-    </header>
+    </nav>
     <div class="container-fluid">
         <div class="row">
             <div id="map_wrapper" style="display: block;">

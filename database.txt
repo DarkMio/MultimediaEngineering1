@@ -1,2 +1,3 @@
 Karte:index.php
 Eintragen:input.php
+Orte:locations.php

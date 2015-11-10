@@ -1,3 +1,13 @@
+<?php
+session_start();
+if (!isset($_SESSION['name']))
+{
+    $_SESSION['name'] = "value";
+    echo "New session created. <br />";
+}
+$name = $_SESSION['name'];
+echo $name;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

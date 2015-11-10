@@ -31,11 +31,42 @@ class MyAPI extends API
     /**
      * Example of an Endpoint
      */
-    protected function textext() {
+    protected function locations() {
         if ($this->method == 'GET') {
-            return "Your name is " . $this->User; //$this->User->name;
+            if(!isset($this->args["offset"])) $this->args["offset"] = "";
+            if(!isset($this->args["zip_code"])) $this->args["zip_code"] = "";
+            return $this->pull_locations($this->args["offset"], $this->args["zip_code"]); //$this->User->name;
         } else {
             return "Only accepts GET requests";
         }
+    }
+
+    protected function pull_locations($offset, $zip_code) {
+        $servername = "localhost";
+        $username = "root";
+        $password = "1337s1mpl3x";
+        $dbname = "tattooliste";
+        $conn = new mysqli($servername, $username, $password, $dbname);
+        $conn->set_charset("utf8");
+
+        if (!isset($offset)) {
+            if (!isset($zip_code)) {
+                $sql_query = "SELECT * FROM locations LIMIT 100 OFFSET ?";
+                $sql = $conn->prepare($sql_query);
+                $sql->bind_param('i', $offset);
+            } else {
+                $sql_query = "SELECT * FROM locations WHERE zip_code HAVING ? LIMIT 100 OFFSET ?";
+                $sql = $conn-> prepare($sql_query);
+                $sql->bind_param('ii', $zip_code, $offset);
+            }
+        } else {
+            $sql_query = "SELECT * FROM locations LIMIT 100";
+            $sql = $conn->prepare($sql_query);
+        }
+
+        $sql->execute();
+        $result = $sql->get_result();
+        mysqli_close($conn);
+        return $result->fetch_all();
     }
 }

@@ -41,6 +41,7 @@ class MyAPI extends API
         }
     }
 
+
     protected function pull_locations($offset, $zip_code) {
         $servername = "localhost";
         $username = "root";

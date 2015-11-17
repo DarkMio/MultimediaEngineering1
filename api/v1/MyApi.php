@@ -1,5 +1,6 @@
 <?php
 
+require_once '../../DatabaseInterface.php';
 require_once 'API.class.php';
 class MyAPI extends API
 {
@@ -41,6 +42,9 @@ class MyAPI extends API
         }
     }
 
+    protected function verifyLocation($zip_code, $location) {
+        $db
+    }
 
     protected function pull_locations($offset, $zip_code) {
         $servername = "localhost";
@@ -70,4 +74,6 @@ class MyAPI extends API
         mysqli_close($conn);
         return $result->fetch_all();
     }
+
+
 }

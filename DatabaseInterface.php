@@ -23,8 +23,9 @@ class DatabaseInterface
 
     protected function __dispatch($query, $types, $arguments) {
         $query = $this->conn->prepare($query);
-        call_user_func(array($query, "bind_param"), array_merge(array($types), $arguments));
-        $query->bind_param($types, $arguments);
+        //call_user_func(array($query, "bind_param"), array_merge(array($types), $arguments));
+        // $query->bind_param(array($types, $arguments));
+        call_user_func_array(array(&$query, 'bind_param'), array_merge(array($types), $arguments));
         $query->execute();
         return $query->get_result()->fetch_all();
     }
@@ -49,7 +50,7 @@ class DatabaseInterface
         if (!isset($zip_code) || !isset($location)) return false;
         $query = "SELECT zip_code FROM locations WHERE zip_code = ? AND location_name = ? LIMIT 1";
         $types = "is";
-        $result = $this->__dispatch($query, $types, array($zip_code, $location));
+        $result = $this->__dispatch($query, $types, array(&$zip_code, &$location));
         return isset($result);
     }
 

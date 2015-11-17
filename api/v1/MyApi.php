@@ -9,7 +9,7 @@ class MyAPI extends API
     protected $db;
     public function __construct($request, $origin) {
         parent::__construct($request);
-        $db = new DatabaseInterface("localhost", "fab", "Jizzinherpants90", "tattooliste");
+        $this->db = new DatabaseInterface("localhost", "root", "1337s1mpl3x", "tattooliste");
         // Abstracted out for example
         $APIKey = "key";//new Models\APIKey();
         $User =  "mio";// new Models\User();
@@ -44,7 +44,7 @@ class MyAPI extends API
     }
 
     protected function verifyLocation() {
-        return $this->verifyLocation("12103", "Berlin");
+        return $this->db->verifyZip("12103", "Berlin");
     }
 /*
     protected function pull_locations($offset, $zip_code) {

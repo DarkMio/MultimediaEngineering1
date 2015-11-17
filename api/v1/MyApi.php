@@ -2,13 +2,14 @@
 
 require_once '../../DatabaseInterface.php';
 require_once 'API.class.php';
+
 class MyAPI extends API
 {
     protected $User;
-
+    protected $db;
     public function __construct($request, $origin) {
         parent::__construct($request);
-
+        $db = new DatabaseInterface("localhost", "fab", "Jizzinherpants90", "tattooliste");
         // Abstracted out for example
         $APIKey = "key";//new Models\APIKey();
         $User =  "mio";// new Models\User();
@@ -42,10 +43,10 @@ class MyAPI extends API
         }
     }
 
-    protected function verifyLocation($zip_code, $location) {
-        $db
+    protected function verifyLocation() {
+        return $this->verifyLocation("12103", "Berlin");
     }
-
+/*
     protected function pull_locations($offset, $zip_code) {
         $servername = "localhost";
         $username = "root";
@@ -74,6 +75,6 @@ class MyAPI extends API
         mysqli_close($conn);
         return $result->fetch_all();
     }
-
+*/
 
 }

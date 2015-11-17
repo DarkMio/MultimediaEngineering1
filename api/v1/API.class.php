@@ -1,4 +1,5 @@
 <?php
+ini_set('memory_limit', '-1');
 
 abstract class API
 {
@@ -37,7 +38,6 @@ abstract class API
      */
 
     public function __construct($request) {
-        $db = new DatabaseInterface("localhost", "root", "1337s1mpl3x", "tattooliste");
         header("Access-Control-Allow-Orgin: *");
         header("Access-Control-Allow-Methods: *");
         header("Content-Type: application/json");

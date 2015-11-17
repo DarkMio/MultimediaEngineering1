@@ -48,10 +48,10 @@ class DatabaseInterface
 
     public function verifyZip($zip_code, $location) {
         if (!isset($zip_code) || !isset($location)) return false;
-        $query = "SELECT zip_code FROM locations WHERE zip_code = ? AND location_name = ? LIMIT 1";
+        $query = "SELECT zip_code, location_name FROM locations WHERE zip_code = ? AND location_name = ? LIMIT 1";
         $types = "is";
         $result = $this->__dispatch($query, $types, array(&$zip_code, &$location));
-        return isset($result);
+        return count($result) > 0;
     }
 
     public function hintLocations($zip_code) {

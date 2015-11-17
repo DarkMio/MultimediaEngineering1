@@ -44,7 +44,10 @@ class MyAPI extends API
     }
 
     protected function verifyLocation() {
-        return $this->db->verifyZip("12103", "Berlin");
+        if(!isset($this->request["zip"])) throw new Exception("No zip");
+        if(!isset($this->request["location"])) throw new Exception("No location");
+
+        return $this->db->verifyZip($this->request["zip"], $this->request["location"]);
     }
 /*
     protected function pull_locations($offset, $zip_code) {

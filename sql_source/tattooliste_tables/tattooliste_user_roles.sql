@@ -26,11 +26,12 @@ CREATE TABLE `user_roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent` int(11) DEFAULT NULL,
   `role_name` varchar(50) NOT NULL,
+  `description` mediumtext,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `parent_id_idx` (`parent`),
   CONSTRAINT `parent_id` FOREIGN KEY (`parent`) REFERENCES `user_roles` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,6 +40,7 @@ CREATE TABLE `user_roles` (
 
 LOCK TABLES `user_roles` WRITE;
 /*!40000 ALTER TABLE `user_roles` DISABLE KEYS */;
+INSERT INTO `user_roles` VALUES (1,NULL,'Administrator','The administrator has full control over all elemntso f the webpage.'),(2,NULL,'Moderator','The moderator has right to modify any studio or person set.\nHe is denied any kind of modification to accounts, passwords or other moderators.'),(3,NULL,'Studio Inhaber','The studio owner can modify his own (and only his own) studio information. He add other accounts as staff, which are able to modify the same data.'),(4,3,'Studio Mitarbeiter','The studio staff can do the same as the owner, besides deleting the studio entirely.'),(5,NULL,'User','A regular user is logged in and has increased vote power. (That\'s it, for now.)'),(6,NULL,'Anon','An anonymous user has little vote power, yet can add studios, which enter the staging table.');
 /*!40000 ALTER TABLE `user_roles` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-01 20:53:53
+-- Dump completed on 2015-11-22 18:56:41

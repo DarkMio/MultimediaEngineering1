@@ -16,32 +16,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `studio_ratings`
+-- Table structure for table `user_login_token`
 --
 
-DROP TABLE IF EXISTS `studio_ratings`;
+DROP TABLE IF EXISTS `user_login_token`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `studio_ratings` (
+CREATE TABLE `user_login_token` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `studio` int(11) NOT NULL,
-  `score` int(2) NOT NULL,
-  `count` int(11) NOT NULL,
-  `avg` double NOT NULL,
-  PRIMARY KEY (`id`),
+  `user_id` int(11) NOT NULL,
+  `user_token` varchar(45) NOT NULL,
+  `vanish_until` datetime NOT NULL COMMENT 'vanish token after xx mins',
+  `valid_until` datetime NOT NULL COMMENT 'kill off token after 24h',
+  PRIMARY KEY (`user_id`,`user_token`,`vanish_until`,`valid_until`,`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
-  UNIQUE KEY `studio_UNIQUE` (`studio`),
-  CONSTRAINT `studio_rating_id` FOREIGN KEY (`studio`) REFERENCES `studios` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  CONSTRAINT `user_id_token` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='lets roll with this -- if we''re going to use some higher functional API, we''re making this happen by oauth2';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `studio_ratings`
+-- Dumping data for table `user_login_token`
 --
 
-LOCK TABLES `studio_ratings` WRITE;
-/*!40000 ALTER TABLE `studio_ratings` DISABLE KEYS */;
-/*!40000 ALTER TABLE `studio_ratings` ENABLE KEYS */;
+LOCK TABLES `user_login_token` WRITE;
+/*!40000 ALTER TABLE `user_login_token` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_login_token` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -53,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-22 18:56:41
+-- Dump completed on 2015-11-22 18:56:42

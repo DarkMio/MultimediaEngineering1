@@ -30,7 +30,7 @@ CREATE TABLE `studio_types` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `parent_id_idx` (`parent`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,6 +39,7 @@ CREATE TABLE `studio_types` (
 
 LOCK TABLES `studio_types` WRITE;
 /*!40000 ALTER TABLE `studio_types` DISABLE KEYS */;
+INSERT INTO `studio_types` VALUES (1,NULL,'Tattoos','This Studio is a regular tattoo studio.'),(2,NULL,'Pircings','Studio does only pircings.'),(3,NULL,'Body Modification','This studio does body modiciations.'),(4,1,'Permanent Makeup','This studio can do permanent makeup tattoos'),(5,3,'Brandings','Studio does brandings.'),(6,NULL,'Jewellery','This studio sells jewellery.'),(7,NULL,'Stamps','This studio offers skin stamping.'),(8,NULL,'Tattoo Removal','This studio offers removal of tattoos.');
 /*!40000 ALTER TABLE `studio_types` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-01 20:53:54
+-- Dump completed on 2015-11-22 18:56:41

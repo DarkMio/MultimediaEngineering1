@@ -33,7 +33,7 @@ CREATE TABLE `addresses` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `location_id_idx` (`location`),
   CONSTRAINT `location_id` FOREIGN KEY (`location`) REFERENCES `locations` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,6 +42,7 @@ CREATE TABLE `addresses` (
 
 LOCK TABLES `addresses` WRITE;
 /*!40000 ALTER TABLE `addresses` DISABLE KEYS */;
+INSERT INTO `addresses` VALUES (1,1356,'Kaiserin-Augusta-Straße',16,13.382144272327423,52.460245705805484),(2,1288,'Templiner Str.',7,13.40859,52.53304),(3,5222,'Saalburgstraße',12,8.53147,50.34146),(4,1429,'Genter Straße',66,52.54893,13.3518);
 /*!40000 ALTER TABLE `addresses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -109,10 +110,11 @@ CREATE TABLE `person_types` (
   `parent` int(11) DEFAULT NULL,
   `name` varchar(50) NOT NULL,
   `description` mediumtext,
+  `do_not_leak` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `parent_id_idx` (`parent`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -121,6 +123,7 @@ CREATE TABLE `person_types` (
 
 LOCK TABLES `person_types` WRITE;
 /*!40000 ALTER TABLE `person_types` DISABLE KEYS */;
+INSERT INTO `person_types` VALUES (1,NULL,'User','Regular user.',0),(2,1,'Private Person','Private Person - NEVER show his personal data',1),(3,1,'Studio Owner','The studio owner can modify his own (and only his own) studio information. He add other accounts as staff, which are able to modify the same data.',0),(4,3,'Studio Staff','The studio staff can do the same as the owner, besides deleting the studio entirely.',0),(5,NULL,'Tattooliste','Website staff.',0);
 /*!40000 ALTER TABLE `person_types` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -139,11 +142,14 @@ CREATE TABLE `persons` (
   `address` int(11) DEFAULT NULL,
   `phone` varchar(15) DEFAULT NULL,
   `created` datetime NOT NULL,
+  `do_not_leak` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `type_id_idx` (`type`),
+  KEY `person_adresses_idx` (`address`),
+  CONSTRAINT `person_adresses` FOREIGN KEY (`address`) REFERENCES `addresses` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `type_id` FOREIGN KEY (`type`) REFERENCES `person_types` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -152,6 +158,7 @@ CREATE TABLE `persons` (
 
 LOCK TABLES `persons` WRITE;
 /*!40000 ALTER TABLE `persons` DISABLE KEYS */;
+INSERT INTO `persons` VALUES (1,5,'Mio','Bambino',1,'017664859527','2015-11-22 18:27:47',NULL),(2,3,'Katharina','Bohn',2,'030 33847185','2015-11-22 18:28:48',NULL),(3,2,'Thomas','Hartwig',3,'','2015-11-22 18:30:30',NULL),(4,5,'Fabian','Wendland',4,'+49 171 2889725','2015-11-22 18:31:05',NULL);
 /*!40000 ALTER TABLE `persons` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -260,7 +267,7 @@ CREATE TABLE `studio_types` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `parent_id_idx` (`parent`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -269,6 +276,7 @@ CREATE TABLE `studio_types` (
 
 LOCK TABLES `studio_types` WRITE;
 /*!40000 ALTER TABLE `studio_types` DISABLE KEYS */;
+INSERT INTO `studio_types` VALUES (1,NULL,'Tattoos','This Studio is a regular tattoo studio.'),(2,NULL,'Pircings','Studio does only pircings.'),(3,NULL,'Body Modification','This studio does body modiciations.'),(4,1,'Permanent Makeup','This studio can do permanent makeup tattoos'),(5,3,'Brandings','Studio does brandings.'),(6,NULL,'Jewellery','This studio sells jewellery.'),(7,NULL,'Stamps','This studio offers skin stamping.'),(8,NULL,'Tattoo Removal','This studio offers removal of tattoos.');
 /*!40000 ALTER TABLE `studio_types` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -298,7 +306,7 @@ CREATE TABLE `studios` (
   CONSTRAINT `creator_id` FOREIGN KEY (`creator`) REFERENCES `persons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `owner_id` FOREIGN KEY (`owner`) REFERENCES `persons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `studio_type_id` FOREIGN KEY (`studio_type`) REFERENCES `studio_types` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -307,7 +315,36 @@ CREATE TABLE `studios` (
 
 LOCK TABLES `studios` WRITE;
 /*!40000 ALTER TABLE `studios` DISABLE KEYS */;
+INSERT INTO `studios` VALUES (1,'True Blue Tattoo',3,1,'030 33847185',2,1,'2015-11-22 18:51:19');
 /*!40000 ALTER TABLE `studios` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_login_token`
+--
+
+DROP TABLE IF EXISTS `user_login_token`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_login_token` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `user_token` varchar(45) NOT NULL,
+  `vanish_until` datetime NOT NULL COMMENT 'vanish token after xx mins',
+  `valid_until` datetime NOT NULL COMMENT 'kill off token after 24h',
+  PRIMARY KEY (`user_id`,`user_token`,`vanish_until`,`valid_until`,`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  CONSTRAINT `user_id_token` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='lets roll with this -- if we''re going to use some higher functional API, we''re making this happen by oauth2';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_login_token`
+--
+
+LOCK TABLES `user_login_token` WRITE;
+/*!40000 ALTER TABLE `user_login_token` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_login_token` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -321,11 +358,12 @@ CREATE TABLE `user_roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent` int(11) DEFAULT NULL,
   `role_name` varchar(50) NOT NULL,
+  `description` mediumtext,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `parent_id_idx` (`parent`),
   CONSTRAINT `parent_id` FOREIGN KEY (`parent`) REFERENCES `user_roles` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -334,6 +372,7 @@ CREATE TABLE `user_roles` (
 
 LOCK TABLES `user_roles` WRITE;
 /*!40000 ALTER TABLE `user_roles` DISABLE KEYS */;
+INSERT INTO `user_roles` VALUES (1,NULL,'Administrator','The administrator has full control over all elemntso f the webpage.'),(2,NULL,'Moderator','The moderator has right to modify any studio or person set.\nHe is denied any kind of modification to accounts, passwords or other moderators.'),(3,NULL,'Studio Inhaber','The studio owner can modify his own (and only his own) studio information. He add other accounts as staff, which are able to modify the same data.'),(4,3,'Studio Mitarbeiter','The studio staff can do the same as the owner, besides deleting the studio entirely.'),(5,NULL,'User','A regular user is logged in and has increased vote power. (That\'s it, for now.)'),(6,NULL,'Anon','An anonymous user has little vote power, yet can add studios, which enter the staging table.');
 /*!40000 ALTER TABLE `user_roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -371,7 +410,6 @@ LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-<!-- KAPPA never leave your fucking Surface unattended. TOP KEK LELELELELELL -->
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
@@ -381,4 +419,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-01 20:53:02
+-- Dump completed on 2015-11-22 18:57:29

@@ -33,7 +33,7 @@ CREATE TABLE `addresses` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `location_id_idx` (`location`),
   CONSTRAINT `location_id` FOREIGN KEY (`location`) REFERENCES `locations` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,6 +42,7 @@ CREATE TABLE `addresses` (
 
 LOCK TABLES `addresses` WRITE;
 /*!40000 ALTER TABLE `addresses` DISABLE KEYS */;
+INSERT INTO `addresses` VALUES (1,1356,'Kaiserin-Augusta-Straße',16,13.382144272327423,52.460245705805484),(2,1288,'Templiner Str.',7,13.40859,52.53304),(3,5222,'Saalburgstraße',12,8.53147,50.34146),(4,1429,'Genter Straße',66,52.54893,13.3518);
 /*!40000 ALTER TABLE `addresses` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-01 20:53:52
+-- Dump completed on 2015-11-22 18:56:40

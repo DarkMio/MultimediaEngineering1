@@ -27,10 +27,11 @@ CREATE TABLE `person_types` (
   `parent` int(11) DEFAULT NULL,
   `name` varchar(50) NOT NULL,
   `description` mediumtext,
+  `do_not_leak` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `parent_id_idx` (`parent`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,6 +40,7 @@ CREATE TABLE `person_types` (
 
 LOCK TABLES `person_types` WRITE;
 /*!40000 ALTER TABLE `person_types` DISABLE KEYS */;
+INSERT INTO `person_types` VALUES (1,NULL,'User','Regular user.',0),(2,1,'Private Person','Private Person - NEVER show his personal data',1),(3,1,'Studio Owner','The studio owner can modify his own (and only his own) studio information. He add other accounts as staff, which are able to modify the same data.',0),(4,3,'Studio Staff','The studio staff can do the same as the owner, besides deleting the studio entirely.',0),(5,NULL,'Tattooliste','Website staff.',0);
 /*!40000 ALTER TABLE `person_types` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-01 20:53:53
+-- Dump completed on 2015-11-22 18:56:40

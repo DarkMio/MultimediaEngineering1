@@ -30,11 +30,14 @@ CREATE TABLE `persons` (
   `address` int(11) DEFAULT NULL,
   `phone` varchar(15) DEFAULT NULL,
   `created` datetime NOT NULL,
+  `do_not_leak` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `type_id_idx` (`type`),
+  KEY `person_adresses_idx` (`address`),
+  CONSTRAINT `person_adresses` FOREIGN KEY (`address`) REFERENCES `addresses` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `type_id` FOREIGN KEY (`type`) REFERENCES `person_types` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,6 +46,7 @@ CREATE TABLE `persons` (
 
 LOCK TABLES `persons` WRITE;
 /*!40000 ALTER TABLE `persons` DISABLE KEYS */;
+INSERT INTO `persons` VALUES (1,5,'Mio','Bambino',1,'017664859527','2015-11-22 18:27:47',NULL),(2,3,'Katharina','Bohn',2,'030 33847185','2015-11-22 18:28:48',NULL),(3,2,'Thomas','Hartwig',3,'','2015-11-22 18:30:30',NULL),(4,5,'Fabian','Wendland',4,'+49 171 2889725','2015-11-22 18:31:05',NULL);
 /*!40000 ALTER TABLE `persons` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +59,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-01 20:53:53
+-- Dump completed on 2015-11-22 18:56:41

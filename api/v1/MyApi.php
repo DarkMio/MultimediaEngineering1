@@ -49,6 +49,14 @@ class MyAPI extends API
 
         return $this->db->verifyZip($this->request["zip"], $this->request["location"]);
     }
+
+    protected function registerUser() {
+        if(!isset($this->request["password"])) throw new Exception("No password");
+        if(!isset($this->request["username"])) throw new Exception("No username");
+        if(!isset($this->request["email"])) throw new Exception("No email");
+        $this->db->registerUser($this->request["password"], $this->request["username"], $this->request["email"]);
+        return ["register" => "success"];
+    }
 /*
     protected function pull_locations($offset, $zip_code) {
         $servername = "localhost";

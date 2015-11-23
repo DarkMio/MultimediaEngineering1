@@ -32,7 +32,7 @@ class MyAPI extends API
     }
     /**
      * Example of an Endpoint
-     */
+
     protected function locations() {
         if ($this->method == 'GET') {
             if(!isset($this->args["offset"])) $this->args["offset"] = "";
@@ -42,19 +42,26 @@ class MyAPI extends API
             return "Only accepts GET requests";
         }
     }
+     */
+
+    protected function findStudios() {
+        if(!isset($this->request["long"])) throw new Exception("No longitude (long)");
+        if(!isset($this->request["lat"])) throw new Exception("No latitude (lat)");
+        $offset = "";
+        if(isset($this->request["offset"])) $offset = $this->request["offset"];
+        return $this->db->get_studios($offset, $this->request["long"], $this->request["lat"]);
+    }
 
     protected function verifyLocation() {
         if(!isset($this->request["zip"])) throw new Exception("No zip");
         if(!isset($this->request["location"])) throw new Exception("No location");
-
         return $this->db->verifyZip($this->request["zip"], $this->request["location"]);
     }
 
-    protected function registerUser() {
+    protected function register() {
         if(!isset($this->request["password"])) throw new Exception("No password");
         if(!isset($this->request["username"])) throw new Exception("No username");
-        if(!isset($this->request["email"])) throw new Exception("No email");
-        $this->db->registerUser($this->request["password"], $this->request["username"], $this->request["email"]);
+        $this->db->registerUser($this->request["password"], $this->request["username"]);
         return ["register" => "success"];
     }
 
@@ -62,9 +69,13 @@ class MyAPI extends API
         // if (!isset($this->request["username"])) $this->request["username"] = $this->request["email"]; // override, check again
         if (!isset($this->request["username"])) throw new Exception("No username / password");
         if (!isset($this->request["password"])) throw new Exception("No password");
-        if ($this->db->login($this->request["username"], $this->request["password"]))
-            return ["login" => "success"];
+        if ($this->db->login($this->request["username"], $this->request["password"])) return ["login" => "success"];
         return ["login" => "failure"];
+    }
+
+    protected function hintLocations() {
+        if (!isset($this->request["zip"])) throw new Exception("No zip");
+        return $this->db->hintLocations($this->request["zip"]);
     }
 /*
     protected function pull_locations($offset, $zip_code) {

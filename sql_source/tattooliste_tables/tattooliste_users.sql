@@ -2,7 +2,7 @@
 --
 -- Host: 127.0.0.1    Database: tattooliste
 -- ------------------------------------------------------
--- Server version	5.6.26
+-- Server version	5.6.26-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -36,7 +36,7 @@ CREATE TABLE `users` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `user_role_id_idx` (`user_role`),
   CONSTRAINT `user_role_id` FOREIGN KEY (`user_role`) REFERENCES `user_roles` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COMMENT='password_hash for SHA-256 - User CAN create a person set BUT don''t have to.';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COMMENT='password_hash for SHA-256 - User CAN create a person set BUT don''t have to.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,7 +45,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (4,'DarkMio','$2y$11$rl4EedFnmb424T6ZQhkN2e5rjYYu2yZ9.07DQJuBn2LvVJoGEHkgG',1,0,'2015-11-22 19:54:12',NULL,0);
+INSERT INTO `users` VALUES (5,'darkmio','$2y$11$SYs6fSpJ7IPXpIOGukFBReTi2lSooZWEAvUjOvagixjQe2zCVBCSe',1,NULL,'2015-11-23 20:22:05',NULL,0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -58,4 +58,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-23 13:57:11
+-- Dump completed on 2015-11-23 22:35:06

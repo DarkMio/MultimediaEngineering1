@@ -2,7 +2,7 @@
 --
 -- Host: 127.0.0.1    Database: tattooliste
 -- ------------------------------------------------------
--- Server version	5.6.26
+-- Server version	5.6.26-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -50,7 +50,7 @@ CREATE TABLE `studios` (
 
 LOCK TABLES `studios` WRITE;
 /*!40000 ALTER TABLE `studios` DISABLE KEYS */;
-INSERT INTO `studios` VALUES (1,'True Blue Tattoo',3,1,'030 33847185',2,1,'2015-11-22 18:51:19');
+INSERT INTO `studios` VALUES (1,'True Blue Tattoo',2,1,'030 33847185',2,1,'2015-11-22 18:51:19');
 /*!40000 ALTER TABLE `studios` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -63,4 +63,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-23 13:57:09
+-- Dump completed on 2015-11-23 22:35:04

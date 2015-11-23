@@ -57,6 +57,15 @@ class MyAPI extends API
         $this->db->registerUser($this->request["password"], $this->request["username"], $this->request["email"]);
         return ["register" => "success"];
     }
+
+    protected function login() {
+        // if (!isset($this->request["username"])) $this->request["username"] = $this->request["email"]; // override, check again
+        if (!isset($this->request["username"])) throw new Exception("No username / password");
+        if (!isset($this->request["password"])) throw new Exception("No password");
+        if ($this->db->login($this->request["username"], $this->request["password"]))
+            return ["login" => "success"];
+        return ["login" => "failure"];
+    }
 /*
     protected function pull_locations($offset, $zip_code) {
         $servername = "localhost";

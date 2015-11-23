@@ -64,11 +64,18 @@ class DatabaseInterface
     public function registerUser($password, $username, $email) {
         $hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 11]);
         if ($hash == false) throw new Exception("Password hashing failed, please try again");
-        $query = "INSERT INTO users(username, password_hash, user_role, person)
-                  VALUES (?, ?, 1, ?)";
-        $types = "sss";
+        $query = "INSERT INTO users(username, password_hash, user_role)
+                  VALUES (?, ?, 1)";
+        $types = "ss";
         // yields nothing, is insert.
-        $this->__dispatch($query, $types, array(&$username, &$hash, &$email));
+        $this->__dispatch($query, $types, array(&$username, &$hash));
+    }
+
+    public function login($username, $password) {
+        $query = "SELECT password_hash FROM users WHERE username = ? LIMIT 1";
+        $types = "s";
+        $result = $this->__dispatch($query, $types, array(&$username))->fetch_all();
+        return password_verify($password, $result[0][0]);
     }
 
 

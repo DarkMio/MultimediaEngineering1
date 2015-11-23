@@ -30,14 +30,13 @@ CREATE TABLE `users` (
   `person` int(11) DEFAULT NULL,
   `created` datetime NOT NULL,
   `last_login` datetime DEFAULT NULL,
+  `verified` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `id_UNIQUE` (`id`),
-  UNIQUE KEY `person_id_UNIQUE` (`person`),
   KEY `user_role_id_idx` (`user_role`),
-  CONSTRAINT `person_id` FOREIGN KEY (`person`) REFERENCES `persons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `user_role_id` FOREIGN KEY (`user_role`) REFERENCES `user_roles` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='password_hash for SHA-256 - User CAN create a person set BUT don''t have to.';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COMMENT='password_hash for SHA-256 - User CAN create a person set BUT don''t have to.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -46,6 +45,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (4,'DarkMio','$2y$11$rl4EedFnmb424T6ZQhkN2e5rjYYu2yZ9.07DQJuBn2LvVJoGEHkgG',1,0,'2015-11-22 19:54:12',NULL,0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -58,4 +58,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-22 18:56:42
+-- Dump completed on 2015-11-23 13:57:11

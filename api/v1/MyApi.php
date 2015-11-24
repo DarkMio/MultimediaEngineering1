@@ -47,9 +47,24 @@ class MyAPI extends API
     protected function findStudios() {
         if(!isset($this->request["long"])) throw new Exception("No longitude (long)");
         if(!isset($this->request["lat"])) throw new Exception("No latitude (lat)");
+        if(!isset($this->request["distance"])) throw new Exception("No distance");
         $offset = "";
         if(isset($this->request["offset"])) $offset = $this->request["offset"];
-        return $this->db->get_studios($offset, $this->request["long"], $this->request["lat"]);
+        return $this->db->get_studios($offset, $this->request["distance"], $this->request["long"], $this->request["lat"]);
+    }
+
+    protected function registerStudio() {
+        /** Check location */
+        if(!isset($this->request["zip"])) throw new Exception("No zip");
+        /** Check address */
+        if(!isset($this->request["long"])) throw new Exception("No longitude (long)");
+        if(!isset($this->request["lat"])) throw new Exception("No latitude (lat)");
+        if(!isset($this->request["streetname"])) throw new Exception("No streetname");
+        if(!isset($this->request["steetnumber"])) throw new Exception("No streetnumber");
+        /** Check studio infos */
+        if(!isset($this->request["studioname"])) throw new Exception("No studioname");
+        if(!isset($this->request["type"])) throw new Exception("No studio type (type)");
+        /** Fill up possible null values */
     }
 
     protected function verifyLocation() {
@@ -70,7 +85,7 @@ class MyAPI extends API
         if (!isset($this->request["username"])) throw new Exception("No username / password");
         if (!isset($this->request["password"])) throw new Exception("No password");
         if ($this->db->login($this->request["username"], $this->request["password"])) return ["login" => "success"];
-        return ["login" => "failure"];
+        throw new Exception("failure - maybe not verified?");
     }
 
     protected function hintLocations() {

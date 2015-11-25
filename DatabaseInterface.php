@@ -30,7 +30,18 @@ class DatabaseInterface
         return $query->get_result();
     }
 
-    /** get a studio for a long/lat and max distance. page returns the next values after that*/
+    protected function map_response($keys, $result_set) {
+        if(count($keys) !== count($result_set[0])) throw new Exception("Invalid length");
+        $container = [];
+        for($i = 0; $i < count($keys); $i++) {
+            $container[$i] = [$keys[$i] => $result_set[0][$i]];
+        }
+        return $container;
+    }
+
+    /** get a studio for a long/lat and max distance. page returns the next values after that
+      * it serves as key,value example as well
+      */
     public function get_studios($page, $distance, $long, $lat){
         $query = $this->GET_STUDIOS_IN_RANGE;
         $types = "";
@@ -42,7 +53,9 @@ class DatabaseInterface
             $types .= "i";
             return $this->__dispatch($query, $types, array(&$page))->fetch_all();
         }
-        return $this->__dispatch($query, $types, [])->fetch_all();
+        $result = $this->__dispatch($query, $types, [])->fetch_all();
+        return $this->map_response(["studio_name", "phone", "zip", "location", "street_name",
+                                        "street_number", "forename", "name", "studio_description", "distance"], $result);
     }
 
     /** check if a location and a zip_code are in our database - resolves naming conflicts */
@@ -85,42 +98,62 @@ class DatabaseInterface
         return password_verify($password, $result[0][0]);
     }
 
+    public function insertStudio($studio_name, $street_name, $street_nr,
+                                 $geo_long, $geo_lat, $zip, $phone, $owner) {
+        if(!$owner) $this->insertPerson($owner["forename"], $owner["name"], $owner["street_name"],
+                                        $owner["street_nr"], $owner["geo_long"], $owner["geo_lat"],
+                                        $owner["zip"], $owner["phone"], "owner");
+        $this->__dispatch($this->INSERT_ADRESS, "ssddi", array(&$street_name,
+                          &$street_nr, &$geo_long, &$geo_lat, &$zip));
+    }
+
+    public function insertPerson($forename, $name, $street_name, $street_nr,
+                                 $geo_long, $geo_lat, $zip, $phone, $type) {
+        $this->__dispatch($this->INSERT_ADDRESS, "ssddi", array(&$street_name,
+                          &$street_nr, &$geo_long, &$geo_lat, &$zip));
+    }
+
+    protected $INSERT_ADDRESS =
+        "INSERT INTO addresses(street_name, stree_nr, geo_long, geo_lat, location)
+         VALUES (?, ?, ?, ?, (SELECT id FROM locations WHERE zip_code = ?))";
+
     protected $GET_STUDIOS_IN_RANGE =
-"SELECT studios.name,
-        studios.phone,
-        locations.zip_code,
-        locations.location_name,
-        addresses.street_name,
-        addresses.stree_nr,
-        persons.first_name,
-        persons.last_name,
-        p.distance_unit
-            * DEGREES(ACOS(COS(RADIANS(p.latpoint))
-            * COS(RADIANS(addresses.geo_lat))
-            * COS(RADIANS(p.longpoint) - RADIANS(addresses.geo_long ))
-            + SIN(RADIANS(p.latpoint))
-            * SIN(RADIANS(addresses.geo_lat)))) AS distance
-FROM 	studios
-JOIN	(   /* these are the query parameters */
-          SELECT  @lat AS latpoint, @lon AS longpoint,
-                  @dist AS radius,   111.045 AS distance_unit
-        ) AS p ON 1=1
-CROSS JOIN 	addresses
-ON 			studios.address = addresses.id
-CROSS JOIN 	locations
-ON 			addresses.location = locations.id
-CROSS JOIN 	persons
-ON 			studios.owner = persons.id
-CROSS JOIN 	studio_types
-ON 			studios.studio_type = studio_types.id
-WHERE 		addresses.geo_lat
-    BETWEEN p.latpoint  - (p.radius / p.distance_unit)
-        AND p.latpoint  + (p.radius / p.distance_unit)
-        AND addresses.geo_long
-    BETWEEN p.longpoint - (p.radius / (p.distance_unit * COS(RADIANS(p.latpoint))))
-        AND p.longpoint + (p.radius / (p.distance_unit * COS(RADIANS(p.latpoint))))
-ORDER BY 	distance
-LIMIT 25";
+        "SELECT studios.name,
+                studios.phone,
+                locations.zip_code,
+                locations.location_name,
+                addresses.street_name,
+                addresses.stree_nr,
+                persons.first_name,
+                persons.last_name,
+                studio_types.description,
+                p.distance_unit
+                    * DEGREES(ACOS(COS(RADIANS(p.latpoint))
+                    * COS(RADIANS(addresses.geo_lat))
+                    * COS(RADIANS(p.longpoint) - RADIANS(addresses.geo_long ))
+                    + SIN(RADIANS(p.latpoint))
+                    * SIN(RADIANS(addresses.geo_lat)))) AS distance
+        FROM 	studios
+        JOIN	(   /* these are the query parameters */
+                  SELECT  @lat AS latpoint, @lon AS longpoint,
+                          @dist AS radius,   111.045 AS distance_unit
+                ) AS p ON 1=1
+        CROSS JOIN 	addresses
+        ON 			studios.address = addresses.id
+        CROSS JOIN 	locations
+        ON 			addresses.location = locations.id
+        CROSS JOIN 	persons
+        ON 			studios.owner = persons.id
+        CROSS JOIN 	studio_types
+        ON 			studios.studio_type = studio_types.id
+        WHERE 		addresses.geo_lat
+            BETWEEN p.latpoint  - (p.radius / p.distance_unit)
+                AND p.latpoint  + (p.radius / p.distance_unit)
+                AND addresses.geo_long
+            BETWEEN p.longpoint - (p.radius / (p.distance_unit * COS(RADIANS(p.latpoint))))
+                AND p.longpoint + (p.radius / (p.distance_unit * COS(RADIANS(p.latpoint))))
+        ORDER BY 	distance
+        LIMIT 25";
 
     protected $VERIFY_ZIP =
         "SELECT zip_code, location_name

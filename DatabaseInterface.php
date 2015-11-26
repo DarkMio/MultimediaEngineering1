@@ -103,15 +103,26 @@ class DatabaseInterface
         if(!$owner) $this->insertPerson($owner["forename"], $owner["name"], $owner["street_name"],
                                         $owner["street_nr"], $owner["geo_long"], $owner["geo_lat"],
                                         $owner["zip"], $owner["phone"], "owner");
-        $this->__dispatch($this->INSERT_ADRESS, "ssddi", array(&$street_name,
-                          &$street_nr, &$geo_long, &$geo_lat, &$zip));
-    }
-
-    public function insertPerson($forename, $name, $street_name, $street_nr,
-                                 $geo_long, $geo_lat, $zip, $phone, $type) {
         $this->__dispatch($this->INSERT_ADDRESS, "ssddi", array(&$street_name,
                           &$street_nr, &$geo_long, &$geo_lat, &$zip));
     }
+
+    protected function insertPerson($forename, $name, $street_name, $street_nr,
+                                    $geo_long, $geo_lat, $zip, $phone, $type) {
+        $this->__dispatch($this->INSERT_ADDRESS, "ssddi", array(&$street_name,
+                          &$street_nr, &$geo_long, &$geo_lat, &$zip));
+        $this->__dispatch($this->INSERT_PERSON,  "issis", array(&$type,
+                          &$forename, &$name, $this->conn->insert_id, &$phone));
+    }
+
+    protected  $INSERT_PERSON =
+        "INSERT INTO persons(type, first_name, last_name, address, phone, created)
+         VALUES      ((SELECT id FROM person_types WHERE name = ?),
+                      ?, ?,
+                      ?,
+                      ?, NOW())";
+
+
 
     protected $INSERT_ADDRESS =
         "INSERT INTO addresses(street_name, stree_nr, geo_long, geo_lat, location)

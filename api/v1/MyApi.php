@@ -26,10 +26,7 @@ class MyAPI extends API
 
         $this->User = $User;
     }
-    protected function verifyKey($x, $origin) {
-        echo $x, $origin;
-        return true;
-    }
+
     /**
      * Example of an Endpoint
 
@@ -45,9 +42,7 @@ class MyAPI extends API
      */
 
     protected function findStudios() {
-        if(!isset($this->request["long"])) throw new Exception("No longitude (long)");
-        if(!isset($this->request["lat"])) throw new Exception("No latitude (lat)");
-        if(!isset($this->request["distance"])) throw new Exception("No distance");
+        parent::checkRequest(["long", "lat", "distance"]);
         $offset = "";
         if(isset($this->request["offset"])) $offset = $this->request["offset"];
         return $this->db->get_studios($offset, $this->request["distance"], $this->request["long"], $this->request["lat"]);
@@ -55,42 +50,66 @@ class MyAPI extends API
 
     protected function registerStudio() {
         /** Check location */
-        if(!isset($this->request["zip"])) throw new Exception("No zip");
-        /** Check address */
-        if(!isset($this->request["long"])) throw new Exception("No longitude (long)");
-        if(!isset($this->request["lat"])) throw new Exception("No latitude (lat)");
-        if(!isset($this->request["streetname"])) throw new Exception("No streetname");
-        if(!isset($this->request["steetnumber"])) throw new Exception("No streetnumber");
-        /** Check studio infos */
-        if(!isset($this->request["studioname"])) throw new Exception("No studioname");
-        if(!isset($this->request["type"])) throw new Exception("No studio type (type)");
+        parent::checkRequest(["zip", "long", "lat", "street_name". "street_number", "type", ]);
+
         /** Fill up possible null values */
     }
 
     protected function verifyLocation() {
-        if(!isset($this->request["zip"])) throw new Exception("No zip");
-        if(!isset($this->request["location"])) throw new Exception("No location");
+        parent::checkRequest(["zip", "location"]);
         return $this->db->verifyZip($this->request["zip"], $this->request["location"]);
     }
 
     protected function register() {
-        if(!isset($this->request["password"])) throw new Exception("No password");
-        if(!isset($this->request["username"])) throw new Exception("No username");
+        parent::checkRequest(["password", "username"]);
         $this->db->registerUser($this->request["password"], $this->request["username"]);
         return ["register" => "success"];
     }
 
     protected function login() {
         // if (!isset($this->request["username"])) $this->request["username"] = $this->request["email"]; // override, check again
-        if (!isset($this->request["username"])) throw new Exception("No username / password");
-        if (!isset($this->request["password"])) throw new Exception("No password");
+        parent::checkRequest(["username", "password"]);;
         if ($this->db->login($this->request["username"], $this->request["password"])) return ["login" => "success"];
         throw new Exception("failure - maybe not verified?");
     }
 
     protected function hintLocations() {
-        if (!isset($this->request["zip"])) throw new Exception("No zip");
+        parent::checkRequest(["zip"]);
         return $this->db->hintLocations($this->request["zip"]);
+    }
+
+    protected function addStudio() {
+        parent::checkRequest(["studio_street_nr", "studio_name", "studio_type",
+            "studio_street_name", "studio_long", "studio_lat", "studio_zip"]);
+        $owner = null;
+        $r = $this->request;
+        if(isset($this->request["owner_name"])) {
+            try {
+                parent::checkRequest(["owner_street_nr", "owner_name", "owner_type",
+                    "owner_street_name", "owner_long", "owner_lat", "owner_zip",
+                    "creator"]);
+                // make an associated array with owner values - may not need owner_ preface
+                // because it generates spaghetti / specialized code-segments.
+                $owner = ["owner_name" => $r["owner_name"],
+                    "owner_forename" => $r["owner_forename"],
+                    "owner_type" => "owner",
+                    "owner_street_name" => $r["owner_street_name"],
+                    "owner_street_nr" => $r["owner_street_nr"],
+                    "owner_long" => $r["owner_long"],
+                    "owner_lat" => $r["owner_lat"],
+                    "owner_zip" => $r["owner_zip"],
+                    "owner_phone" => isset($r["owner_phone"]) ? $r["owner_phone"] : null,
+                    "creator" => isset($r["creator"]) ? $r["creator"] : null,
+                ];
+            } catch (APIException $e) {
+                // nothing - maybe return exception info on missing creator params?
+            }
+        }
+        $creator = isset($r["creator"]) ? $r["creator"] : null; // pls don't hurt me.
+        $studio_phone = isset($r["studio_phone"]) ? $r["studio_phone"] : null;
+        $this->db->insertStudio($r["studio_name"], $r["studio_type"], $r["studio_street_name"],
+            $r["studio_street_nr"], $r["studio_long"], $r["studio_lat"], $r["studio_zip"],
+            $studio_phone, $creator, $owner);
     }
 /*
     protected function pull_locations($offset, $zip_code) {

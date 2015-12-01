@@ -18,16 +18,26 @@ class DatabaseInterface
 
     /** dispatches a database request */
     protected function __dispatch($query, $types, $arguments) {
+        print_r($query);
+        print_r($types);
+        print_r($arguments);
         // @CLEANUP:
         // error_reporting(0);
         $query = $this->conn->prepare($query);
         if(!$query) throw new Exception($this->conn->error);
         //call_user_func(array($query, "bind_param"), array_merge(array($types), $arguments));
         // $query->bind_param(array($types, $arguments));
-        if($types !== "") call_user_func_array(array(&$query, 'bind_param'), array_merge(array($types), $arguments));
-        if(!$query) throw new Exception("Query exception");
+        $this->__bind($query, $types, $arguments);
+        if(!$query) throw new Exception("Query exception: " . $this->conn->error);
         $query->execute();
         return $query->get_result();
+    }
+
+    protected function __bind($query, $types, $arguments) {
+        if($types !== "") {
+            call_user_func_array(array(&$query, 'bind_param'), array_merge(array($types), $arguments));
+        }
+
     }
 
     protected function map_response($keys, $result_set) {
@@ -98,13 +108,31 @@ class DatabaseInterface
         return password_verify($password, $result[0][0]);
     }
 
-    public function insertStudio($studio_name, $street_name, $street_nr,
-                                 $geo_long, $geo_lat, $zip, $phone, $owner) {
-        if(!$owner) $this->insertPerson($owner["forename"], $owner["name"], $owner["street_name"],
-                                        $owner["street_nr"], $owner["geo_long"], $owner["geo_lat"],
-                                        $owner["zip"], $owner["phone"], "owner");
+    public function insertStudio($studio_name, $studio_type, $street_name, $street_nr,
+                                 $geo_long, $geo_lat, $zip, $studio_phone, $creator, $owner = null) {
+        $owner_id = null;
+        $creator_id = null;
+        if($owner) { // the API is responsible for checking completeness of data
+            $this->insertPerson($owner["forename"], $owner["name"], $owner["street_name"],
+                $owner["street_nr"], $owner["geo_long"], $owner["geo_lat"],
+                $owner["zip"], $owner["phone"], "owner");
+            $owner_id = $this->conn->insert_id;
+        }
+        // write a new address into the database
         $this->__dispatch($this->INSERT_ADDRESS, "ssddi", array(&$street_name,
                           &$street_nr, &$geo_long, &$geo_lat, &$zip));
+        $address_id = $this->conn->insert_id;
+
+        if($creator) {
+            /*
+            $this->__dispatch($this->INSERT_STUDIO, "ssddi", array(&$studio_name, &$this->conn->insert_id,
+                &$studio_type, &$studio_phone, &$owner_id, &$creator));
+            */
+        }
+        $this->__dispatch($this->INSERT_STUDIO, "sissis",
+            array(&$studio_name, &$address_id, &$studio_type,
+                  &$studio_phone, &$owner_id, &$creator_id));
+        return true;
     }
 
     protected function insertPerson($forename, $name, $street_name, $street_nr,
@@ -113,11 +141,22 @@ class DatabaseInterface
                           &$street_nr, &$geo_long, &$geo_lat, &$zip));
         $this->__dispatch($this->INSERT_PERSON,  "issis", array(&$type,
                           &$forename, &$name, $this->conn->insert_id, &$phone));
+        return true;
     }
+
+    protected $INSERT_STUDIO =
+        "INSERT INTO studios(studio_name, address, studio_type, phone, owner, creator, created)
+         VALUES     (?,
+                     ?,
+                    (SELECT id FROM studio_types WHERE type_name = ?),
+                     ?,
+                    (SELECT id FROM persons WHERE id = ?),
+                    (SELECT id FROM users WHERE username = ?),
+                     NOW())";
 
     protected  $INSERT_PERSON =
         "INSERT INTO persons(type, first_name, last_name, address, phone, created)
-         VALUES      ((SELECT id FROM person_types WHERE name = ?),
+         VALUES      ((SELECT id FROM person_types WHERE person_name = ?),
                       ?, ?,
                       ?,
                       ?, NOW())";
@@ -129,7 +168,7 @@ class DatabaseInterface
          VALUES (?, ?, ?, ?, (SELECT id FROM locations WHERE zip_code = ?))";
 
     protected $GET_STUDIOS_IN_RANGE =
-        "SELECT studios.name,
+        "SELECT studios.studio_name,
                 studios.phone,
                 locations.zip_code,
                 locations.location_name,

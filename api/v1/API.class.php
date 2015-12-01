@@ -79,7 +79,13 @@ abstract class API
 
     public function processAPI() {
         if (method_exists($this, $this->endpoint)) {
-            return $this->_response($this->{$this->endpoint}($this->args));
+            try {
+                return $this->_response($this->{$this->endpoint}($this->args));
+            } catch (APIException $e) {
+              return $this->_response($e->getOptions(), 400);
+            } catch (Exception $e) {
+                return $this->_response($e->getMessage(), 405);
+            }
         }
         return $this->_response("No Endpoint: $this->endpoint", 404);
     }
@@ -106,10 +112,42 @@ abstract class API
     private function _requestStatus($code) {
         $status = array(
             200 => 'OK',
+            400 => 'Bad Request',
             404 => 'Not Found',
             405 => 'Method Not Allowed',
             500 => 'Internal Server Error',
         );
-        return ($status[$code])?$status[$code]:$status[500];
+
+        return ($status[$code]) ? $status[$code] : $status[500];
+    }
+
+    public function checkRequest($keys) {
+        $dict = ["missing_parameters" => []];
+        $critical_error = false;
+        foreach($keys as $key){
+            if(!isset($this->request[$key])) {
+                $dict["missing_parameters"][] = $key;
+                $critical_error = true;
+            }
+        }
+        if ($critical_error) throw new APIException($dict);
     }
 }
+
+class APIException extends \Exception
+{
+
+    private $_options;
+
+    public function __construct(array $options,
+                                $code = 0,
+                                Exception $previous = null)
+    {
+        parent::__construct("API Exception", $code, $previous);
+
+        $this->_options = $options;
+    }
+
+    public function GetOptions() { return $this->_options; }
+}
+

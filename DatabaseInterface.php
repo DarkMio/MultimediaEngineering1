@@ -18,9 +18,6 @@ class DatabaseInterface
 
     /** dispatches a database request */
     protected function __dispatch($query, $types, $arguments) {
-        print_r($query);
-        print_r($types);
-        print_r($arguments);
         // @CLEANUP:
         // error_reporting(0);
         $query = $this->conn->prepare($query);
@@ -29,22 +26,23 @@ class DatabaseInterface
         // $query->bind_param(array($types, $arguments));
         $this->__bind($query, $types, $arguments);
         if(!$query) throw new Exception("Query exception: " . $this->conn->error);
+        if($types !== "") call_user_func_array(array(&$query, 'bind_param'), array_merge(array($types), $arguments));
         $query->execute();
         return $query->get_result();
     }
 
-    protected function __bind($query, $types, $arguments) {
-        if($types !== "") {
-            call_user_func_array(array(&$query, 'bind_param'), array_merge(array($types), $arguments));
-        }
-
-    }
-
+    /**
+     * Makes a sick dictionary out of keys / values
+     * @param $keys String array
+     * @param $result_set array of json-able objects
+     * @return array of associated array
+     * @throws Exception Debug exception - if your result set length is not equal of key array length
+     */
     protected function map_response($keys, $result_set) {
-        if(count($keys) !== count($result_set[0])) throw new Exception("Invalid length");
+        if(count($keys) !== count($result_set)) throw new Exception("Invalid length");
         $container = [];
         for($i = 0; $i < count($keys); $i++) {
-            $container[$i] = [$keys[$i] => $result_set[0][$i]];
+            $container[$i] = [$keys[$i] => $result_set[$i]];
         }
         return $container;
     }
@@ -65,15 +63,20 @@ class DatabaseInterface
         }
         $result = $this->__dispatch($query, $types, [])->fetch_all();
         return $this->map_response(["studio_name", "phone", "zip", "location", "street_name",
-                                        "street_number", "forename", "name", "studio_description", "distance"], $result);
+            "street_number", "forename", "name", "studio_description", "distance"], $result[0]);
+    }
+
+    /**
+     * Verifies a user key for the api.
+     */
+    public function verifyKey($key, $username) {
+        $result = $this->__dispatch($this->VERIFY_KEY, "ss", array(&$key, &$username))->fetch_all();
+        return count($result) > 0;
     }
 
     /** check if a location and a zip_code are in our database - resolves naming conflicts */
     public function verifyZip($zip_code, $location) {
-        if (!isset($zip_code) || !isset($location)) return false;
-        $query = $this->VERIFY_ZIP;
-        $types = "is";
-        $result = $this->__dispatch($query, $types, array(&$zip_code, &$location))->fetch_all();
+        $result = $this->__dispatch($this->VERIFY_ZIP, "is", array(&$zip_code, &$location))->fetch_all();
         return count($result) > 0;
     }
 
@@ -99,35 +102,40 @@ class DatabaseInterface
         $this->__dispatch($query, $types, array(&$username, &$hash));
     }
 
-    /** verify a users credentials */
+    /**
+     * User logs in with this function - gets a user token that is valid for 24h
+     * @param $username
+     * @param $password
+     * @return array
+     * @throws Exception
+     */
     public function login($username, $password) {
-        $query = $this->GET_PASSWORD_HASH_FOR_USER;
-        $types = "s";
-        $result = $this->__dispatch($query, $types, array(&$username))->fetch_all();
-        if(count($result)<1) return false;
-        return password_verify($password, $result[0][0]);
+        $fail = ["success" => false];
+        $result = $this->__dispatch($this->GET_PASSWORD_HASH_FOR_USER, "s", array(&$username))->fetch_all();
+        if(count($result)<1) return $fail;
+        if(password_verify($password, $result[0][0])) {
+            return $this->generateUserKeys($username);
+        } else return $fail;
     }
 
     public function insertStudio($studio_name, $studio_type, $street_name, $street_nr,
-                                 $geo_long, $geo_lat, $zip, $studio_phone, $creator, $owner = null) {
+                                 $geo_long, $geo_lat, $zip, $studio_phone, $creator,
+                                 $location, $owner = null) {
         $owner_id = null;
         $creator_id = null;
         if($owner) { // the API is responsible for checking completeness of data
             $this->insertPerson($owner["forename"], $owner["name"], $owner["street_name"],
                 $owner["street_nr"], $owner["geo_long"], $owner["geo_lat"],
-                $owner["zip"], $owner["phone"], "owner");
+                $owner["zip"], $owner["location"], $owner["phone"], $owner["type"]);
             $owner_id = $this->conn->insert_id;
         }
         // write a new address into the database
-        $this->__dispatch($this->INSERT_ADDRESS, "ssddi", array(&$street_name,
-                          &$street_nr, &$geo_long, &$geo_lat, &$zip));
+        $this->__dispatch($this->INSERT_ADDRESS, "ssddis", array(&$street_name,
+                          &$street_nr, &$geo_long, &$geo_lat, &$zip, &$location));
         $address_id = $this->conn->insert_id;
 
-        if($creator) {
-            /*
-            $this->__dispatch($this->INSERT_STUDIO, "ssddi", array(&$studio_name, &$this->conn->insert_id,
-                &$studio_type, &$studio_phone, &$owner_id, &$creator));
-            */
+        if(isset($creator)) {
+            $creator_id = $this->__dispatch($this->SELECT_CREATOR_ID, "s", array($creator))->fetch_row();
         }
         $this->__dispatch($this->INSERT_STUDIO, "sissis",
             array(&$studio_name, &$address_id, &$studio_type,
@@ -136,13 +144,19 @@ class DatabaseInterface
     }
 
     protected function insertPerson($forename, $name, $street_name, $street_nr,
-                                    $geo_long, $geo_lat, $zip, $phone, $type) {
-        $this->__dispatch($this->INSERT_ADDRESS, "ssddi", array(&$street_name,
-                          &$street_nr, &$geo_long, &$geo_lat, &$zip));
+                                    $geo_long, $geo_lat, $zip, $location, $phone, $type) {
+        $this->__dispatch($this->INSERT_ADDRESS, "ssddis", array(&$street_name,
+                          &$street_nr, &$geo_long, &$geo_lat, &$zip, &$location));
+        $address_id = $this->conn->insert_id;
+        if(!$address_id) throw new Exception("API Request failed - address not written");
         $this->__dispatch($this->INSERT_PERSON,  "issis", array(&$type,
-                          &$forename, &$name, $this->conn->insert_id, &$phone));
+                          &$forename, &$name, &$address_id, &$phone));
+        if(!$this->conn->insert_id) throw new Exception("API Request failed - person not written.");
         return true;
     }
+
+    protected $SELECT_CREATOR_ID =
+        "SELECT id FROM users WHERE lower(username) = lower(?)";
 
     protected $INSERT_STUDIO =
         "INSERT INTO studios(studio_name, address, studio_type, phone, owner, creator, created)
@@ -161,11 +175,9 @@ class DatabaseInterface
                       ?,
                       ?, NOW())";
 
-
-
     protected $INSERT_ADDRESS =
         "INSERT INTO addresses(street_name, stree_nr, geo_long, geo_lat, location)
-         VALUES (?, ?, ?, ?, (SELECT id FROM locations WHERE zip_code = ?))";
+         VALUES (?, ?, ?, ?, (SELECT id FROM locations WHERE zip_code = ? AND location_name = ?))";
 
     protected $GET_STUDIOS_IN_RANGE =
         "SELECT studios.studio_name,
@@ -204,6 +216,12 @@ class DatabaseInterface
                 AND p.longpoint + (p.radius / (p.distance_unit * COS(RADIANS(p.latpoint))))
         ORDER BY 	distance
         LIMIT 25";
+
+    protected $VERIFY_KEY =
+        "SELECT * FROM user_login_token
+         WHERE  valid_until > NOW()
+         AND    user_token = ?
+         AND    user_id = (SELECT id FROM users WHERE username = ?)";
 
     protected $VERIFY_ZIP =
         "SELECT zip_code, location_name

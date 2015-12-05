@@ -33,10 +33,15 @@ abstract class API
     protected $file = Null;
 
     /**
+     * Property: db
+     * @var DatabaseInterface
+     * Is a "permanent" connection to the database.
+     */
+    protected $db = null;
+    /**
      * Constructor: __construct
      * Allow for CORS, assemble and pre-process the data
      */
-
     public function __construct($request) {
         header("Access-Control-Allow-Orgin: *");
         header("Access-Control-Allow-Methods: *");
@@ -75,6 +80,8 @@ abstract class API
                 $this->_response('Invalid Method', 405);
                 break;
         }
+
+        $this->db = new DatabaseInterface("localhost", "root", "1337s1mpl3x", "tattooliste");
     }
 
     public function processAPI() {
@@ -92,7 +99,8 @@ abstract class API
 
     private function _response($data, $status = 200) {
         header("HTTP/1.1 " . $status . " " . $this->_requestStatus($status));
-        return json_encode(["status" => $status,
+        return json_encode(["request" => $this->request,
+                            "status" => $status,
                             "api" => "v1",
                             "response" => $data]);
     }
@@ -131,6 +139,10 @@ abstract class API
             }
         }
         if ($critical_error) throw new APIException($dict);
+    }
+
+    private function verifyKey($key, $username) {
+        return $this->db->verifyKey($key, $username);
     }
 }
 

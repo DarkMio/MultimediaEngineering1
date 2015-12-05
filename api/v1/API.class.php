@@ -141,8 +141,9 @@ abstract class API
         if ($critical_error) throw new APIException($dict);
     }
 
-    private function verifyKey($key, $username) {
-        return $this->db->verifyKey($key, $username);
+    public function verifyKey() {
+        $this->checkRequest(["key", "username"]);
+        return $this->db->verifyKey($this->request["key"], $this->request["username"]);
     }
 }
 

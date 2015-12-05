@@ -9,36 +9,8 @@ class MyAPI extends API
 
     public function __construct($request, $origin) {
         parent::__construct($request);
-        // Abstracted out for example
-        $APIKey = "key";//new Models\APIKey();
-        $User =  "mio";// new Models\User();
-
-        if (!array_key_exists('apiKey', $this->request)) {
-            throw new Exception('No API Key provided');
-        } else if ($APIKey !== $this->request['apiKey']) {// !$APIKey->verifyKey($this->request['apiKey'], $origin)) {
-            throw new Exception('Invalid API Key');
-        } else if (array_key_exists('token', $this->request) &&
-            !$User->get('token', $this->request['token'])) {
-
-            throw new Exception('Invalid User Token');
-        }
-
-        $this->User = $User;
+        if ($this->method != 'GET') throw new Exception("This API only accepts GET requests");
     }
-
-    /**
-     * Example of an Endpoint
-
-    protected function locations() {
-        if ($this->method == 'GET') {
-            if(!isset($this->args["offset"])) $this->args["offset"] = "";
-            if(!isset($this->args["zip_code"])) $this->args["zip_code"] = "";
-            return $this->pull_locations($this->args["offset"], $this->args["zip_code"]); //$this->User->name;
-        } else {
-            return "Only accepts GET requests";
-        }
-    }
-     */
 
     protected function findStudios() {
         parent::checkRequest(["long", "lat", "distance"]);
@@ -60,7 +32,9 @@ class MyAPI extends API
 
     protected function login() {
         parent::checkRequest(["username", "password"]);;
-        return $this->db->login($this->request["username"], $this->request["password"]); // return ["login" => "success"];
+        $result = $this->db->login($this->request["username"], $this->request["password"]); // return ["login" => "success"];
+        $this->request["password"] = "hidden";
+        return $result;
         // throw new Exception("failure - maybe not verified?");
     }
 
@@ -70,6 +44,7 @@ class MyAPI extends API
     }
 
     protected function addStudio() {
+        parent::verifyKey();
         parent::checkRequest(["studio_street_nr", "studio_name", "studio_type",
             "studio_street_name", "studio_long", "studio_lat", "studio_zip", "studio_location"]);
         $owner = null;

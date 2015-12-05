@@ -59,10 +59,9 @@ class MyAPI extends API
     }
 
     protected function login() {
-
         parent::checkRequest(["username", "password"]);;
-        if ($this->db->login($this->request["username"], $this->request["password"])) return ["login" => "success"];
-        throw new Exception("failure - maybe not verified?");
+        return $this->db->login($this->request["username"], $this->request["password"]); // return ["login" => "success"];
+        // throw new Exception("failure - maybe not verified?");
     }
 
     protected function hintLocations() {

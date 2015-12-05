@@ -24,7 +24,6 @@ class DatabaseInterface
         if(!$query) throw new Exception($this->conn->error);
         //call_user_func(array($query, "bind_param"), array_merge(array($types), $arguments));
         // $query->bind_param(array($types, $arguments));
-        $this->__bind($query, $types, $arguments);
         if(!$query) throw new Exception("Query exception: " . $this->conn->error);
         if($types !== "") call_user_func_array(array(&$query, 'bind_param'), array_merge(array($types), $arguments));
         $query->execute();
@@ -42,7 +41,7 @@ class DatabaseInterface
         if(count($keys) !== count($result_set)) throw new Exception("Invalid length");
         $container = [];
         for($i = 0; $i < count($keys); $i++) {
-            $container[$i] = [$keys[$i] => $result_set[$i]];
+            $container += [$keys[$i] => $result_set[$i]];
         }
         return $container;
     }
@@ -118,6 +117,18 @@ class DatabaseInterface
         } else return $fail;
     }
 
+    public function generateUserKeys($username) {
+        // check if there is one key
+        $result = $this->__dispatch($this->SELECT_USER_KEY, "s", array(&$username))->fetch_all();
+
+        if(count($result) > 0) { // if so, update with new keys (no concurrent users are possible)
+            $this->__dispatch($this->REGENERATE_USER_KEY, "s", array(&$username));
+        } else { // if not, create a completely new key
+            $this->__dispatch($this->GENERATE_USER_KEY, "s", array(&$username));
+        } // and then return the key
+        return $this->map_response(["success", "token", "valid_until"], array_merge([true], $this->__dispatch($this->SELECT_USER_KEY, "s", array(&$username))->fetch_all()[0]));
+    }
+
     public function insertStudio($studio_name, $studio_type, $street_name, $street_nr,
                                  $geo_long, $geo_lat, $zip, $studio_phone, $creator,
                                  $location, $owner = null) {
@@ -154,6 +165,23 @@ class DatabaseInterface
         if(!$this->conn->insert_id) throw new Exception("API Request failed - person not written.");
         return true;
     }
+
+    protected $SELECT_USER_KEY =
+        "SELECT user_token, valid_until
+         FROM   user_login_token
+         WHERE  user_id = (SELECT id FROM users WHERE username = ?)";
+
+    protected $REGENERATE_USER_KEY =
+        "UPDATE user_login_token
+         SET user_token = SUBSTRING(MD5((UNIX_TIMESTAMP(NOW()) * 1000000 + MICROSECOND(NOW(6)))),1,32),
+             valid_until = NOW() + INTERVAL 1 DAY
+         WHERE user_id = (SELECT id FROM users WHERE username = ?)";
+
+    protected $GENERATE_USER_KEY =
+        "INSERT INTO user_login_token(user_token, user_id, valid_until)
+         VALUES (SUBSTRING(MD5((UNIX_TIMESTAMP(NOW()) * 1000000 + MICROSECOND(NOW(6)))),1,32),
+                 (SELECT id FROM users WHERE username = ?),
+                 NOW() + INTERVAL 1 DAY)";
 
     protected $SELECT_CREATOR_ID =
         "SELECT id FROM users WHERE lower(username) = lower(?)";

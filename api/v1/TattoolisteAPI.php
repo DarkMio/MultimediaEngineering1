@@ -1,6 +1,6 @@
 <?php
 
-require_once '../../DatabaseInterface.php';
+require_once 'DatabaseInterface.php';
 require_once 'API.class.php';
 
 class MyAPI extends API
@@ -9,13 +9,23 @@ class MyAPI extends API
 
     public function __construct($request, $origin) {
         parent::__construct($request);
+        // Disables all other request methods.
         if ($this->method != 'GET') throw new Exception("This API only accepts GET requests");
+    }
+
+    /**
+     *  Debug function - should NEVER be on the production system.
+     * @TODO: Cleanup pls.
+     */
+    protected function getAllStudios() {
+        return $this->db->get_all_studios();
     }
 
     protected function findStudios() {
         parent::checkRequest(["long", "lat", "distance"]);
         $offset = "";
-        if(isset($this->request["offset"])) $offset = $this->request["offset"];
+        if(isset($this->request["page"]))
+            $offset = $this->request["page"];
         return $this->db->get_studios($offset, $this->request["distance"], $this->request["long"], $this->request["lat"]);
     }
 
@@ -27,15 +37,16 @@ class MyAPI extends API
     protected function register() {
         parent::checkRequest(["password", "username"]);
         $this->db->registerUser($this->request["password"], $this->request["username"]);
+        // if it didn't throw an error - then it worked.
         return ["register" => "success"];
     }
 
     protected function login() {
         parent::checkRequest(["username", "password"]);;
-        $result = $this->db->login($this->request["username"], $this->request["password"]); // return ["login" => "success"];
+        $result = $this->db->login($this->request["username"], $this->request["password"]);
+        // overwrite password in request - for security reasons
         $this->request["password"] = "hidden";
         return $result;
-        // throw new Exception("failure - maybe not verified?");
     }
 
     protected function hintLocations() {

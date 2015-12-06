@@ -2,7 +2,7 @@
 --
 -- Host: 127.0.0.1    Database: tattooliste
 -- ------------------------------------------------------
--- Server version	5.6.26-log
+-- Server version	5.5.5-10.0.17-MariaDB-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -25,13 +25,12 @@ DROP TABLE IF EXISTS `user_login_token`;
 CREATE TABLE `user_login_token` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `user_token` varchar(45) NOT NULL,
-  `vanish_until` datetime NOT NULL COMMENT 'vanish token after xx mins',
+  `user_token` varchar(32) NOT NULL,
   `valid_until` datetime NOT NULL COMMENT 'kill off token after 24h',
-  PRIMARY KEY (`user_id`,`user_token`,`vanish_until`,`valid_until`,`id`),
+  PRIMARY KEY (`user_id`,`user_token`,`valid_until`,`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   CONSTRAINT `user_id_token` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='lets roll with this -- if we''re going to use some higher functional API, we''re making this happen by oauth2';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 COMMENT='lets roll with this -- if we''re going to use some higher functional API, we''re making this happen by oauth2';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,6 +39,7 @@ CREATE TABLE `user_login_token` (
 
 LOCK TABLES `user_login_token` WRITE;
 /*!40000 ALTER TABLE `user_login_token` DISABLE KEYS */;
+INSERT INTO `user_login_token` VALUES (3,5,'7516cdb024d526d792374f4f14d6ea92','2015-12-06 14:07:31'),(2,11,'74eaef029b4111e587b283a9c5e21de8','2015-12-06 12:15:14');
 /*!40000 ALTER TABLE `user_login_token` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-23 22:35:06
+-- Dump completed on 2015-12-06 20:17:43

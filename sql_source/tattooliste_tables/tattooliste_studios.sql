@@ -2,7 +2,7 @@
 --
 -- Host: 127.0.0.1    Database: tattooliste
 -- ------------------------------------------------------
--- Server version	5.6.26-log
+-- Server version	5.5.5-10.0.17-MariaDB-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -24,14 +24,14 @@ DROP TABLE IF EXISTS `studios`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `studios` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
+  `studio_name` varchar(100) NOT NULL,
   `address` int(11) NOT NULL,
   `studio_type` int(11) NOT NULL,
   `phone` varchar(15) DEFAULT NULL,
   `owner` int(11) DEFAULT NULL,
   `creator` int(11) DEFAULT NULL,
   `created` datetime NOT NULL,
-  PRIMARY KEY (`id`,`name`,`address`),
+  PRIMARY KEY (`id`,`studio_name`,`address`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `adress_id_idx` (`address`),
   KEY `studio_type_id_idx` (`studio_type`),
@@ -41,7 +41,7 @@ CREATE TABLE `studios` (
   CONSTRAINT `creator_id` FOREIGN KEY (`creator`) REFERENCES `persons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `owner_id` FOREIGN KEY (`owner`) REFERENCES `persons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `studio_type_id` FOREIGN KEY (`studio_type`) REFERENCES `studio_types` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -50,7 +50,7 @@ CREATE TABLE `studios` (
 
 LOCK TABLES `studios` WRITE;
 /*!40000 ALTER TABLE `studios` DISABLE KEYS */;
-INSERT INTO `studios` VALUES (1,'True Blue Tattoo',2,1,'030 33847185',2,1,'2015-11-22 18:51:19');
+INSERT INTO `studios` VALUES (1,'True Blue Tattoo',2,1,'030 33847185',2,1,'2015-11-22 18:51:19'),(2,'Ein Studio',6,2,'4598459495',NULL,NULL,'2015-12-02 08:26:26'),(3,'Ein Studio',7,2,'4598459495',NULL,NULL,'2015-12-02 08:29:00'),(4,'Ein Studio',8,2,'4598459495',NULL,NULL,'2015-12-02 08:30:36'),(5,'Ein Studio',10,2,'4598459495',NULL,NULL,'2015-12-02 08:36:34'),(6,'Ein Studio',12,2,'4598459495',NULL,NULL,'2015-12-02 08:44:58'),(7,'Ein Studio',14,2,'4598459495',NULL,NULL,'2015-12-02 08:47:56'),(8,'Ein Studio',16,2,'4598459495',NULL,NULL,'2015-12-02 08:48:00'),(9,'Ein Studio',18,2,'4598459495',NULL,NULL,'2015-12-02 08:48:15'),(10,'Ein Studio',20,2,'4598459495',NULL,NULL,'2015-12-02 08:49:02'),(11,'Ein Studio',22,2,'4598459495',NULL,NULL,'2015-12-02 08:49:20'),(12,'Ein Studio',24,2,'4598459495',NULL,NULL,'2015-12-02 08:50:26'),(13,'Ein Studio',26,2,'4598459495',NULL,NULL,'2015-12-02 08:51:43'),(14,'Ein Studio',28,2,'4598459495',NULL,NULL,'2015-12-02 08:55:04'),(15,'Ein Studio',30,2,'4598459495',NULL,NULL,'2015-12-02 08:56:04'),(16,'Ein Studio',32,2,'4598459495',NULL,NULL,'2015-12-04 10:18:10'),(17,'Ein Studio',34,2,'4598459495',NULL,NULL,'2015-12-04 11:38:06'),(18,'Ein Studio',36,2,'4598459495',NULL,NULL,'2015-12-04 11:39:59');
 /*!40000 ALTER TABLE `studios` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -63,4 +63,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-23 22:35:04
+-- Dump completed on 2015-12-06 20:17:40

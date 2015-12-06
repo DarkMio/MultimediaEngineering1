@@ -2,7 +2,7 @@
 --
 -- Host: 127.0.0.1    Database: tattooliste
 -- ------------------------------------------------------
--- Server version	5.6.26-log
+-- Server version	5.5.5-10.0.17-MariaDB-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -33,7 +33,7 @@ CREATE TABLE `addresses` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `location_id_idx` (`location`),
   CONSTRAINT `location_id` FOREIGN KEY (`location`) REFERENCES `locations` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +42,7 @@ CREATE TABLE `addresses` (
 
 LOCK TABLES `addresses` WRITE;
 /*!40000 ALTER TABLE `addresses` DISABLE KEYS */;
-INSERT INTO `addresses` VALUES (1,1356,'Kaiserin-Augusta-Straße','16',13.382144272327423,52.460245705805484),(2,1288,'Templiner Str.','7',13.40859,52.53304),(3,5222,'Saalburgstraße','12',8.53147,50.34146),(4,1429,'Genter Straße','66',52.54893,13.3518);
+INSERT INTO `addresses` VALUES (1,1356,'Kaiserin-Augusta-Straße','16',13.382144272327423,52.460245705805484),(2,1288,'Templiner Str.','7',13.40859,52.53304),(3,5222,'Saalburgstraße','12',8.53147,50.34146),(4,1429,'Genter Straße','66',52.54893,13.3518),(5,1356,'Studuo','15',12.382144272327423,50.460245705805484),(6,1356,'Blumenthalstraße','12',53,13),(7,1356,'Blumenthalstraße','12',53,13),(8,1356,'Blumenthalstraße','12',53,13),(9,1356,'Seinestr.','12',44,22),(10,1356,'Blumenthalstraße','12',53,13),(11,1356,'Seinestr.','12',44,22),(12,1356,'Blumenthalstraße','12',53,13),(13,1356,'Seinestr.','12',44,22),(14,1356,'Blumenthalstraße','12',53,13),(15,1356,'Seinestr.','12',44,22),(16,1356,'Blumenthalstraße','12',53,13),(17,1356,'Seinestr.','12',44,22),(18,1356,'Blumenthalstraße','12',53,13),(19,1356,'Seinestr.','12',44,22),(20,1356,'Blumenthalstraße','12',53,13),(21,1356,'Seinestr.','12',44,22),(22,1356,'Blumenthalstraße','12',53,13),(23,1356,'Seinestr.','12',44,22),(24,1356,'Blumenthalstraße','12',53,13),(25,1356,'Seinestr.','12',44,22),(26,1356,'Blumenthalstraße','12',53,13),(27,1356,'Seinestr.','12',44,22),(28,1356,'Blumenthalstraße','12',53,13),(29,1356,'Seinestr.','12',44,22),(30,1356,'Blumenthalstraße','12',53,13),(31,1356,'Seinestr.','12',44,22),(32,1356,'Blumenthalstraße','12',53,13),(33,1356,'Seinestr.','12',44,22),(34,1356,'Blumenthalstraße','12',53,13),(35,1356,'Seinestr.','12',44,22),(36,1356,'Blumenthalstraße','12',53,13);
 /*!40000 ALTER TABLE `addresses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -108,7 +108,7 @@ DROP TABLE IF EXISTS `person_types`;
 CREATE TABLE `person_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent` int(11) DEFAULT NULL,
-  `name` varchar(50) NOT NULL,
+  `person_name` varchar(50) NOT NULL,
   `description` mediumtext,
   `do_not_leak` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
@@ -142,14 +142,13 @@ CREATE TABLE `persons` (
   `address` int(11) DEFAULT NULL,
   `phone` varchar(15) DEFAULT NULL,
   `created` datetime NOT NULL,
-  `do_not_leak` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `type_id_idx` (`type`),
   KEY `person_adresses_idx` (`address`),
   CONSTRAINT `person_adresses` FOREIGN KEY (`address`) REFERENCES `addresses` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `type_id` FOREIGN KEY (`type`) REFERENCES `person_types` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -158,7 +157,7 @@ CREATE TABLE `persons` (
 
 LOCK TABLES `persons` WRITE;
 /*!40000 ALTER TABLE `persons` DISABLE KEYS */;
-INSERT INTO `persons` VALUES (1,5,'Mio','Bambino',1,'017664859527','2015-11-22 18:27:47',NULL),(2,3,'Katharina','Bohn',2,'030 33847185','2015-11-22 18:28:48',NULL),(3,2,'Thomas','Hartwig',3,'','2015-11-22 18:30:30',NULL),(4,5,'Fabian','Wendland',4,'+49 171 2889725','2015-11-22 18:31:05',NULL);
+INSERT INTO `persons` VALUES (1,5,'Mio','Bambino',1,'017664859527','2015-11-22 18:27:47'),(2,3,'Katharina','Bohn',2,'030 33847185','2015-11-22 18:28:48'),(3,2,'Thomas','Hartwig',3,'','2015-11-22 18:30:30'),(4,5,'Fabian','Wendland',4,'+49 171 2889725','2015-11-22 18:31:05'),(7,3,'Hans','Jörg',25,'017664859527','2015-12-02 08:54:59');
 /*!40000 ALTER TABLE `persons` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -289,14 +288,14 @@ DROP TABLE IF EXISTS `studios`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `studios` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
+  `studio_name` varchar(100) NOT NULL,
   `address` int(11) NOT NULL,
   `studio_type` int(11) NOT NULL,
   `phone` varchar(15) DEFAULT NULL,
   `owner` int(11) DEFAULT NULL,
   `creator` int(11) DEFAULT NULL,
   `created` datetime NOT NULL,
-  PRIMARY KEY (`id`,`name`,`address`),
+  PRIMARY KEY (`id`,`studio_name`,`address`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `adress_id_idx` (`address`),
   KEY `studio_type_id_idx` (`studio_type`),
@@ -306,7 +305,7 @@ CREATE TABLE `studios` (
   CONSTRAINT `creator_id` FOREIGN KEY (`creator`) REFERENCES `persons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `owner_id` FOREIGN KEY (`owner`) REFERENCES `persons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `studio_type_id` FOREIGN KEY (`studio_type`) REFERENCES `studio_types` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -315,7 +314,7 @@ CREATE TABLE `studios` (
 
 LOCK TABLES `studios` WRITE;
 /*!40000 ALTER TABLE `studios` DISABLE KEYS */;
-INSERT INTO `studios` VALUES (1,'True Blue Tattoo',2,1,'030 33847185',2,1,'2015-11-22 18:51:19');
+INSERT INTO `studios` VALUES (1,'True Blue Tattoo',2,1,'030 33847185',2,1,'2015-11-22 18:51:19'),(2,'Ein Studio',6,2,'4598459495',NULL,NULL,'2015-12-02 08:26:26'),(3,'Ein Studio',7,2,'4598459495',NULL,NULL,'2015-12-02 08:29:00'),(4,'Ein Studio',8,2,'4598459495',NULL,NULL,'2015-12-02 08:30:36'),(5,'Ein Studio',10,2,'4598459495',NULL,NULL,'2015-12-02 08:36:34'),(6,'Ein Studio',12,2,'4598459495',NULL,NULL,'2015-12-02 08:44:58'),(7,'Ein Studio',14,2,'4598459495',NULL,NULL,'2015-12-02 08:47:56'),(8,'Ein Studio',16,2,'4598459495',NULL,NULL,'2015-12-02 08:48:00'),(9,'Ein Studio',18,2,'4598459495',NULL,NULL,'2015-12-02 08:48:15'),(10,'Ein Studio',20,2,'4598459495',NULL,NULL,'2015-12-02 08:49:02'),(11,'Ein Studio',22,2,'4598459495',NULL,NULL,'2015-12-02 08:49:20'),(12,'Ein Studio',24,2,'4598459495',NULL,NULL,'2015-12-02 08:50:26'),(13,'Ein Studio',26,2,'4598459495',NULL,NULL,'2015-12-02 08:51:43'),(14,'Ein Studio',28,2,'4598459495',NULL,NULL,'2015-12-02 08:55:04'),(15,'Ein Studio',30,2,'4598459495',NULL,NULL,'2015-12-02 08:56:04'),(16,'Ein Studio',32,2,'4598459495',NULL,NULL,'2015-12-04 10:18:10'),(17,'Ein Studio',34,2,'4598459495',NULL,NULL,'2015-12-04 11:38:06'),(18,'Ein Studio',36,2,'4598459495',NULL,NULL,'2015-12-04 11:39:59');
 /*!40000 ALTER TABLE `studios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -329,13 +328,12 @@ DROP TABLE IF EXISTS `user_login_token`;
 CREATE TABLE `user_login_token` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `user_token` varchar(45) NOT NULL,
-  `vanish_until` datetime NOT NULL COMMENT 'vanish token after xx mins',
+  `user_token` varchar(32) NOT NULL,
   `valid_until` datetime NOT NULL COMMENT 'kill off token after 24h',
-  PRIMARY KEY (`user_id`,`user_token`,`vanish_until`,`valid_until`,`id`),
+  PRIMARY KEY (`user_id`,`user_token`,`valid_until`,`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   CONSTRAINT `user_id_token` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='lets roll with this -- if we''re going to use some higher functional API, we''re making this happen by oauth2';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 COMMENT='lets roll with this -- if we''re going to use some higher functional API, we''re making this happen by oauth2';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -344,6 +342,7 @@ CREATE TABLE `user_login_token` (
 
 LOCK TABLES `user_login_token` WRITE;
 /*!40000 ALTER TABLE `user_login_token` DISABLE KEYS */;
+INSERT INTO `user_login_token` VALUES (3,5,'7516cdb024d526d792374f4f14d6ea92','2015-12-06 14:07:31'),(2,11,'74eaef029b4111e587b283a9c5e21de8','2015-12-06 12:15:14');
 /*!40000 ALTER TABLE `user_login_token` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -397,7 +396,7 @@ CREATE TABLE `users` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `user_role_id_idx` (`user_role`),
   CONSTRAINT `user_role_id` FOREIGN KEY (`user_role`) REFERENCES `user_roles` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COMMENT='password_hash for SHA-256 - User CAN create a person set BUT don''t have to.';
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1 COMMENT='password_hash for SHA-256 - User CAN create a person set BUT don''t have to.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -406,7 +405,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (5,'darkmio','$2y$11$SYs6fSpJ7IPXpIOGukFBReTi2lSooZWEAvUjOvagixjQe2zCVBCSe',1,NULL,'2015-11-23 20:22:05',NULL,0);
+INSERT INTO `users` VALUES (5,'darkmio','$2y$11$SYs6fSpJ7IPXpIOGukFBReTi2lSooZWEAvUjOvagixjQe2zCVBCSe',1,NULL,'2015-11-23 20:22:05',NULL,1),(6,'fab','$2y$11$oY.0dV46k8ZAtgI5lJwQNOpZbIXnIwjaH4RctD96gXXOc6EPPOMDq',1,NULL,'0000-00-00 00:00:00',NULL,1),(7,'penisman','$2y$11$VJ184AGxnq5p2nkT/7Ol9uJE9g6Um5VDLvAZ3bb1mzHaRUxlGaIm.',1,NULL,'0000-00-00 00:00:00',NULL,1),(8,'deimudda','$2y$11$uVQ4JevlceGUplYQvW2VGOpUzXPEAhDqoEtbpV.V5p1XWmVzgiki6',1,NULL,'2015-11-24 12:44:20',NULL,1),(9,'pavlista','$2y$11$U3jvHm4AS3CVklxTQlEMzu8sO6qvNCVMk0dfBYyKPvEE8QndjnoCu',1,NULL,'2015-11-24 13:20:51',NULL,1),(10,'username','$2y$11$xeEWGXOm4pS4jXGfW17fbeUyaa64ieFfgROoWySOXPUHsJrlAWjPG',1,NULL,'2015-12-01 12:29:34',NULL,1),(11,'name','$2y$11$YNOailvjPpEC/9EnbjkqyepWS/UlIcTtBWiG6cIwecYTuepjrVndS',1,NULL,'2015-12-05 12:04:09',NULL,1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -419,4 +418,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-23 22:35:20
+-- Dump completed on 2015-12-06 20:19:57

@@ -2,7 +2,7 @@
 --
 -- Host: 127.0.0.1    Database: tattooliste
 -- ------------------------------------------------------
--- Server version	5.5.5-10.0.17-MariaDB-log
+-- Server version	5.6.26
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -42,7 +42,7 @@ CREATE TABLE `addresses` (
 
 LOCK TABLES `addresses` WRITE;
 /*!40000 ALTER TABLE `addresses` DISABLE KEYS */;
-INSERT INTO `addresses` VALUES (1,1356,'Kaiserin-Augusta-Straße','16',13.382144272327423,52.460245705805484),(2,1288,'Templiner Str.','7',13.40859,52.53304),(3,5222,'Saalburgstraße','12',8.53147,50.34146),(4,1429,'Genter Straße','66',52.54893,13.3518),(5,1356,'Studuo','15',12.382144272327423,50.460245705805484),(6,1356,'Blumenthalstraße','12',53,13),(7,1356,'Blumenthalstraße','12',53,13),(8,1356,'Blumenthalstraße','12',53,13),(9,1356,'Seinestr.','12',44,22),(10,1356,'Blumenthalstraße','12',53,13),(11,1356,'Seinestr.','12',44,22),(12,1356,'Blumenthalstraße','12',53,13),(13,1356,'Seinestr.','12',44,22),(14,1356,'Blumenthalstraße','12',53,13),(15,1356,'Seinestr.','12',44,22),(16,1356,'Blumenthalstraße','12',53,13),(17,1356,'Seinestr.','12',44,22),(18,1356,'Blumenthalstraße','12',53,13),(19,1356,'Seinestr.','12',44,22),(20,1356,'Blumenthalstraße','12',53,13),(21,1356,'Seinestr.','12',44,22),(22,1356,'Blumenthalstraße','12',53,13),(23,1356,'Seinestr.','12',44,22),(24,1356,'Blumenthalstraße','12',53,13),(25,1356,'Seinestr.','12',44,22),(26,1356,'Blumenthalstraße','12',53,13),(27,1356,'Seinestr.','12',44,22),(28,1356,'Blumenthalstraße','12',53,13),(29,1356,'Seinestr.','12',44,22),(30,1356,'Blumenthalstraße','12',53,13),(31,1356,'Seinestr.','12',44,22),(32,1356,'Blumenthalstraße','12',53,13),(33,1356,'Seinestr.','12',44,22),(34,1356,'Blumenthalstraße','12',53,13),(35,1356,'Seinestr.','12',44,22),(36,1356,'Blumenthalstraße','12',53,13);
+INSERT INTO `addresses` VALUES (1,1356,'Kaiserin-Augusta-Straße','16',13.382144272327423,52.460245705805484),(2,1288,'Templiner Str.','7',13.40859,52.53304),(3,5222,'Saalburgstraße','12',8.53147,50.34146),(4,1429,'Genter Straße','66',52.54893,13.3518),(5,1356,'Studuo','15',12.382144272327423,50.460245705805484),(6,1356,'Mariendorfer Damm','12',13.38,52.44),(7,1356,'Seestraße','999a',13.4,52.2);
 /*!40000 ALTER TABLE `addresses` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-12-06 20:17:40
+-- Dump completed on 2015-12-06 22:17:19

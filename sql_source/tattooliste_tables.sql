@@ -2,7 +2,7 @@
 --
 -- Host: 127.0.0.1    Database: tattooliste
 -- ------------------------------------------------------
--- Server version	5.5.5-10.0.17-MariaDB-log
+-- Server version	5.6.26
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -42,7 +42,7 @@ CREATE TABLE `addresses` (
 
 LOCK TABLES `addresses` WRITE;
 /*!40000 ALTER TABLE `addresses` DISABLE KEYS */;
-INSERT INTO `addresses` VALUES (1,1356,'Kaiserin-Augusta-Straße','16',13.382144272327423,52.460245705805484),(2,1288,'Templiner Str.','7',13.40859,52.53304),(3,5222,'Saalburgstraße','12',8.53147,50.34146),(4,1429,'Genter Straße','66',52.54893,13.3518),(5,1356,'Studuo','15',12.382144272327423,50.460245705805484),(6,1356,'Blumenthalstraße','12',53,13),(7,1356,'Blumenthalstraße','12',53,13),(8,1356,'Blumenthalstraße','12',53,13),(9,1356,'Seinestr.','12',44,22),(10,1356,'Blumenthalstraße','12',53,13),(11,1356,'Seinestr.','12',44,22),(12,1356,'Blumenthalstraße','12',53,13),(13,1356,'Seinestr.','12',44,22),(14,1356,'Blumenthalstraße','12',53,13),(15,1356,'Seinestr.','12',44,22),(16,1356,'Blumenthalstraße','12',53,13),(17,1356,'Seinestr.','12',44,22),(18,1356,'Blumenthalstraße','12',53,13),(19,1356,'Seinestr.','12',44,22),(20,1356,'Blumenthalstraße','12',53,13),(21,1356,'Seinestr.','12',44,22),(22,1356,'Blumenthalstraße','12',53,13),(23,1356,'Seinestr.','12',44,22),(24,1356,'Blumenthalstraße','12',53,13),(25,1356,'Seinestr.','12',44,22),(26,1356,'Blumenthalstraße','12',53,13),(27,1356,'Seinestr.','12',44,22),(28,1356,'Blumenthalstraße','12',53,13),(29,1356,'Seinestr.','12',44,22),(30,1356,'Blumenthalstraße','12',53,13),(31,1356,'Seinestr.','12',44,22),(32,1356,'Blumenthalstraße','12',53,13),(33,1356,'Seinestr.','12',44,22),(34,1356,'Blumenthalstraße','12',53,13),(35,1356,'Seinestr.','12',44,22),(36,1356,'Blumenthalstraße','12',53,13);
+INSERT INTO `addresses` VALUES (1,1356,'Kaiserin-Augusta-Straße','16',13.382144272327423,52.460245705805484),(2,1288,'Templiner Str.','7',13.40859,52.53304),(3,5222,'Saalburgstraße','12',8.53147,50.34146),(4,1429,'Genter Straße','66',52.54893,13.3518),(5,1356,'Studuo','15',12.382144272327423,50.460245705805484),(6,1356,'Mariendorfer Damm','12',13.38,52.44),(7,1356,'Seestraße','999a',13.4,52.2);
 /*!40000 ALTER TABLE `addresses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -157,7 +157,7 @@ CREATE TABLE `persons` (
 
 LOCK TABLES `persons` WRITE;
 /*!40000 ALTER TABLE `persons` DISABLE KEYS */;
-INSERT INTO `persons` VALUES (1,5,'Mio','Bambino',1,'017664859527','2015-11-22 18:27:47'),(2,3,'Katharina','Bohn',2,'030 33847185','2015-11-22 18:28:48'),(3,2,'Thomas','Hartwig',3,'','2015-11-22 18:30:30'),(4,5,'Fabian','Wendland',4,'+49 171 2889725','2015-11-22 18:31:05'),(7,3,'Hans','Jörg',25,'017664859527','2015-12-02 08:54:59');
+INSERT INTO `persons` VALUES (1,5,'Mio','Bambino',1,'017664859527','2015-11-22 18:27:47'),(2,3,'Katharina','Bohn',2,'030 33847185','2015-11-22 18:28:48'),(3,2,'Thomas','Hartwig',3,'','2015-11-22 18:30:30'),(4,5,'Fabian','Wendland',4,'+49 171 2889725','2015-11-22 18:31:05');
 /*!40000 ALTER TABLE `persons` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -314,7 +314,7 @@ CREATE TABLE `studios` (
 
 LOCK TABLES `studios` WRITE;
 /*!40000 ALTER TABLE `studios` DISABLE KEYS */;
-INSERT INTO `studios` VALUES (1,'True Blue Tattoo',2,1,'030 33847185',2,1,'2015-11-22 18:51:19'),(2,'Ein Studio',6,2,'4598459495',NULL,NULL,'2015-12-02 08:26:26'),(3,'Ein Studio',7,2,'4598459495',NULL,NULL,'2015-12-02 08:29:00'),(4,'Ein Studio',8,2,'4598459495',NULL,NULL,'2015-12-02 08:30:36'),(5,'Ein Studio',10,2,'4598459495',NULL,NULL,'2015-12-02 08:36:34'),(6,'Ein Studio',12,2,'4598459495',NULL,NULL,'2015-12-02 08:44:58'),(7,'Ein Studio',14,2,'4598459495',NULL,NULL,'2015-12-02 08:47:56'),(8,'Ein Studio',16,2,'4598459495',NULL,NULL,'2015-12-02 08:48:00'),(9,'Ein Studio',18,2,'4598459495',NULL,NULL,'2015-12-02 08:48:15'),(10,'Ein Studio',20,2,'4598459495',NULL,NULL,'2015-12-02 08:49:02'),(11,'Ein Studio',22,2,'4598459495',NULL,NULL,'2015-12-02 08:49:20'),(12,'Ein Studio',24,2,'4598459495',NULL,NULL,'2015-12-02 08:50:26'),(13,'Ein Studio',26,2,'4598459495',NULL,NULL,'2015-12-02 08:51:43'),(14,'Ein Studio',28,2,'4598459495',NULL,NULL,'2015-12-02 08:55:04'),(15,'Ein Studio',30,2,'4598459495',NULL,NULL,'2015-12-02 08:56:04'),(16,'Ein Studio',32,2,'4598459495',NULL,NULL,'2015-12-04 10:18:10'),(17,'Ein Studio',34,2,'4598459495',NULL,NULL,'2015-12-04 11:38:06'),(18,'Ein Studio',36,2,'4598459495',NULL,NULL,'2015-12-04 11:39:59');
+INSERT INTO `studios` VALUES (1,'True Blue Tattoo',2,1,'030 33847185',2,1,'2015-11-22 18:51:19'),(2,'Ein Studio',6,2,'4598459495',1,1,'2015-12-02 08:26:26'),(3,'Cool Cat and \'ze Hodendudler',7,2,NULL,NULL,NULL,'2015-12-02 08:29:00');
 /*!40000 ALTER TABLE `studios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -342,7 +342,7 @@ CREATE TABLE `user_login_token` (
 
 LOCK TABLES `user_login_token` WRITE;
 /*!40000 ALTER TABLE `user_login_token` DISABLE KEYS */;
-INSERT INTO `user_login_token` VALUES (3,5,'7516cdb024d526d792374f4f14d6ea92','2015-12-06 14:07:31'),(2,11,'74eaef029b4111e587b283a9c5e21de8','2015-12-06 12:15:14');
+INSERT INTO `user_login_token` VALUES (2,11,'74eaef029b4111e587b283a9c5e21de8','2015-12-06 12:15:14'),(3,5,'2392492ae9afc2c304e4d851b7524ebf','2015-12-07 21:32:34');
 /*!40000 ALTER TABLE `user_login_token` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -418,4 +418,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-12-06 20:19:57
+-- Dump completed on 2015-12-06 22:17:42

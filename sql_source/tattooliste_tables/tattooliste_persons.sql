@@ -2,7 +2,7 @@
 --
 -- Host: 127.0.0.1    Database: tattooliste
 -- ------------------------------------------------------
--- Server version	5.5.5-10.0.17-MariaDB-log
+-- Server version	5.6.26
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -45,7 +45,7 @@ CREATE TABLE `persons` (
 
 LOCK TABLES `persons` WRITE;
 /*!40000 ALTER TABLE `persons` DISABLE KEYS */;
-INSERT INTO `persons` VALUES (1,5,'Mio','Bambino',1,'017664859527','2015-11-22 18:27:47'),(2,3,'Katharina','Bohn',2,'030 33847185','2015-11-22 18:28:48'),(3,2,'Thomas','Hartwig',3,'','2015-11-22 18:30:30'),(4,5,'Fabian','Wendland',4,'+49 171 2889725','2015-11-22 18:31:05'),(7,3,'Hans','Jörg',25,'017664859527','2015-12-02 08:54:59');
+INSERT INTO `persons` VALUES (1,5,'Mio','Bambino',1,'017664859527','2015-11-22 18:27:47'),(2,3,'Katharina','Bohn',2,'030 33847185','2015-11-22 18:28:48'),(3,2,'Thomas','Hartwig',3,'','2015-11-22 18:30:30'),(4,5,'Fabian','Wendland',4,'+49 171 2889725','2015-11-22 18:31:05');
 /*!40000 ALTER TABLE `persons` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -58,4 +58,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-12-06 20:17:43
+-- Dump completed on 2015-12-06 22:17:20

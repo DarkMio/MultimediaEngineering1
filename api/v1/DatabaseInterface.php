@@ -65,6 +65,21 @@ class DatabaseInterface
     }
 
     /**
+     * Searches the user_roles table if a certain user right is higher than what you're trying to do
+     * @param $targetRight
+     * @param $userRight
+     * @return bool
+     * @throws Exception
+     */
+    protected function checkUserRights($targetRight, $userRight) {
+        while ($userRight) {
+            $userRight = $this->__dispatch($this->GET_PARENT_USER_ROLE, "d", array(&$userRight))->fetch_row()[0];
+            if ($userRight == $targetRight) return true;
+        }
+        return false;
+    }
+
+    /**
      * get a studio for a long/lat and max distance. page returns the next values after that
      * it serves as key,value example as well
      * @param $page
@@ -272,6 +287,9 @@ class DatabaseInterface
      * ------------------------------------------------- *
      * There is no indication of types and security.     *
      *****************************************************/
+    protected $GET_PARENT_USER_ROLE =
+        "SELECT parent FROM user_roles WHERE id = ? LIMIT 1";
+
     protected $GET_ALL_STUDIOS =
         "SELECT studios.studio_name,
                 studios.phone,

@@ -51,6 +51,13 @@ class DatabaseInterface
         return $container;
     }
 
+    /**
+     * Maps a collection with given keys each.
+     * @param $keys
+     * @param array $results
+     * @return array
+     * @throws Exception
+     */
     protected function map_response_multiple($keys, array $results) {
         for($i = 0; $i < count($results); $i ++)
             $results[$i] = $this->map_response_single($keys, $results[$i]);
@@ -102,8 +109,12 @@ class DatabaseInterface
      * @return bool
      * @throws Exception
      */
-    public function verifyKey($key, $username) {
-        $result = $this->__dispatch($this->VERIFY_KEY, "ss", array(&$key, &$username))->fetch_all();
+    public function verifyKey($key, $username, $role) {
+        if (!$role) {
+            $result = $this->__dispatch($this->VERIFY_KEY, "ss", array(&$key, &$username))->fetch_all();
+        } else {
+            $result = $this->__dispatch($this->VERIFY_KEY_WITH_ROLE, "sss", array(&$key, &$username, &$role))->fetch_all();
+        }
         return count($result) > 0;
     }
 
@@ -407,6 +418,18 @@ class DatabaseInterface
         ORDER BY 	distance
         LIMIT 25
         OFFSET ?";
+
+    protected $VERIFY_KEY_WITH_ROLE =
+        "SELECT *
+         FROM   user_login_token
+         CROSS JOIN users
+         ON     user_id = users.id
+         CROSS JOIN user_roles
+         ON     users.user_role = user_roles.id
+         WHERE  valid_until > NOW()
+         AND    LOWER(user_token) = LOWER(?) /* the user key is always lower*/
+         AND    LOWER(users.username) = LOWER(?)
+         AND    LOWER(user_roles.role_name) = LOWER(?)";
 
     protected $VERIFY_KEY =
         "SELECT * FROM user_login_token

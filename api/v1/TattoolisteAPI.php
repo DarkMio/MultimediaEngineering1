@@ -85,6 +85,10 @@ class MyAPI extends API
         }
         $creator = isset($r["creator"]) ? $r["creator"] : null; // pls don't hurt me.
         $studio_phone = isset($r["studio_phone"]) ? $r["studio_phone"] : null;
+
+        if(isset($r["force"]) && isset($r["key"]) && parent::verifyKey("Administrator")) {
+
+        }
         $this->db->insertStudio($r["studio_name"], $r["studio_type"], $r["studio_street_name"],
             $r["studio_street_nr"], $r["studio_long"], $r["studio_lat"], $r["studio_zip"],
             $r["studio_location"], $studio_phone, $creator, $owner);

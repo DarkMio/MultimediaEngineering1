@@ -14,11 +14,16 @@ class MyAPI extends API
     }
 
     /**
-     *  Debug function - should NEVER be on the production system.
-     * @TODO: Cleanup pls.
+     * Debug function - should NEVER be on the production system.
+     * @TODO: Cleanup pls - checks now if someone is a moderator, so it's more "secure"
      */
     protected function getAllStudios() {
+        parent::verifyKey(2);
         return $this->db->get_all_studios();
+    }
+
+    protected function amimod() {
+        return parent::verifyKey(2);
     }
 
     protected function findStudios() {
@@ -55,11 +60,18 @@ class MyAPI extends API
     }
 
     protected function addStudio() {
-        parent::verifyKey();
+        $r = $this->request;
+        $owner = null;
+
+        try {
+            parent::verifyKey(2); // moderator and above
+            $into_live = isset($r["force"]);
+        } catch (Exception $e) {
+            $into_live = false;
+        }
+
         parent::checkRequest(["studio_street_nr", "studio_name", "studio_type",
             "studio_street_name", "studio_long", "studio_lat", "studio_zip", "studio_location"]);
-        $owner = null;
-        $r = $this->request;
         if(isset($r["owner_name"])) {
             try {
                 parent::checkRequest(["owner_street_nr", "owner_name",
@@ -83,15 +95,21 @@ class MyAPI extends API
                 // nothing - maybe return exception info on missing creator params?
             }
         }
+
         $creator = isset($r["creator"]) ? $r["creator"] : null; // pls don't hurt me.
         $studio_phone = isset($r["studio_phone"]) ? $r["studio_phone"] : null;
 
-        if(isset($r["force"]) && isset($r["key"]) && parent::verifyKey("Administrator")) {
-
-        }
         $this->db->insertStudio($r["studio_name"], $r["studio_type"], $r["studio_street_name"],
             $r["studio_street_nr"], $r["studio_long"], $r["studio_lat"], $r["studio_zip"],
-            $r["studio_location"], $studio_phone, $creator, $owner);
+            $r["studio_location"], $studio_phone, $creator, $owner, $into_live);
         return ["response" => "success"];
+    }
+
+    protected function showStaged() {
+        $r = $this->request;
+        parent::verifyKey(2); // moderator and above
+        $page = isset($r["page"]) ? $r["page"] : 0;
+        $amount = isset($r["results"]) ? $r["results"] : 50;
+        return $this->db->showStaged($amount, $page);;
     }
 }

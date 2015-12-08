@@ -76,7 +76,7 @@ class DatabaseInterface
             $userRight = $this->__dispatch($this->GET_PARENT_USER_ROLE, "d", array(&$userRight))->fetch_row()[0];
             if ($userRight == $targetRight) return true;
         }
-        return false;
+        throw new Exception("Not enough rights to execute this API endnode.");
     }
 
     /**
@@ -124,12 +124,10 @@ class DatabaseInterface
      * @return bool
      * @throws Exception
      */
-    public function verifyKey($key, $username, $role) {
-        if (!$role) {
-            $result = $this->__dispatch($this->VERIFY_KEY, "ss", array(&$key, &$username))->fetch_all();
-        } else {
-            $result = $this->__dispatch($this->VERIFY_KEY_WITH_ROLE, "sss", array(&$key, &$username, &$role))->fetch_all();
-        }
+    public function verifyKey($key, $username, $minRole = null) {
+        $result = $this->__dispatch($this->VERIFY_KEY_AND_GET_ROLE, "ss", array(&$key, &$username))->fetch_row();
+        if($minRole)
+            return $this->checkUserRights($minRole, $result[0]);
         return count($result) > 0;
     }
 
@@ -232,7 +230,7 @@ class DatabaseInterface
      */
     public function insertStudio($studio_name, $studio_type, $street_name, $street_nr,
                                  $geo_long, $geo_lat, $zip, $studio_phone, $creator,
-                                 $location, $owner = null) {
+                                 $location, $owner = null, $into_live=false) {
         $owner_id = null;
         $creator_id = null;
         if($owner) { // the API is responsible for checking completeness of data
@@ -249,9 +247,17 @@ class DatabaseInterface
         if(isset($creator)) {
             $creator_id = $this->__dispatch($this->SELECT_CREATOR_ID, "s", array($creator))->fetch_row();
         }
-        $this->__dispatch($this->INSERT_STUDIO, "sissis",
-            array(&$studio_name, &$address_id, &$studio_type,
-                  &$studio_phone, &$owner_id, &$creator_id));
+
+        // Moderators can insert instantly into live
+        if($into_live) {
+            $this->__dispatch($this->INSERT_STUDIO_IN_LIVE, "sissis",
+                array(&$studio_name, &$address_id, &$studio_type,
+                    &$studio_phone, &$owner_id, &$creator_id));
+        } else {
+            $this->__dispatch($this->INSERT_STUDIO_IN_STAGING, "sissis",
+                array(&$studio_name, &$address_id, &$studio_type,
+                    &$studio_phone, &$owner_id, &$creator_id));
+        }
         return ["success" => true];
     }
 
@@ -282,11 +288,30 @@ class DatabaseInterface
         return ["success" => true];
     }
 
+    public function showStaged($amount=50, $page=0) {
+        return $this->__dispatch($this->GET_ALL_STAGED, "ii", array(&$amount, &$page))->fetch_all();
+    }
+
     /*****************************************************
      * Following are constants containing DB statements. *
      * ------------------------------------------------- *
      * There is no indication of types and security.     *
      *****************************************************/
+    protected $GET_ALL_STAGED =
+        "SELECT         *
+         FROM           studios_staging
+         CROSS JOIN 	addresses
+         ON 			studios_staging.address = addresses.id
+         CROSS JOIN 	locations
+         ON 			addresses.location = locations.id
+         LEFT OUTER JOIN persons
+         ON 			studios_staging.owner = persons.id
+         CROSS JOIN 	studio_types
+         ON 			studios_staging.studio_type = studio_types.id
+         ORDER BY       studios_staging.id
+         LIMIT          ?
+         OFFSET         ?";
+
     protected $GET_PARENT_USER_ROLE =
         "SELECT parent FROM user_roles WHERE id = ? LIMIT 1";
 
@@ -337,8 +362,18 @@ class DatabaseInterface
     protected $SELECT_CREATOR_ID =
         "SELECT id FROM users WHERE LOWER(username) = LOWER(?) LIMIT 1";
 
-    protected $INSERT_STUDIO =
+    protected $INSERT_STUDIO_IN_LIVE =
         "INSERT INTO studios(studio_name, address, studio_type, phone, owner, creator, created)
+         VALUES     (?,
+                     ?,
+                    (SELECT id FROM studio_types WHERE LOWER(type_name) = LOWER(?)),
+                     ?,
+                    (SELECT id FROM persons WHERE id = ?),
+                    (SELECT id FROM users WHERE LOWER(username) = LOWER(?)),
+                     NOW())";
+
+    protected $INSERT_STUDIO_IN_STAGING =
+        "INSERT INTO studios_staging(studio_name, address, studio_type, phone, owner, creator, created)
          VALUES     (?,
                      ?,
                     (SELECT id FROM studio_types WHERE LOWER(type_name) = LOWER(?)),
@@ -437,8 +472,8 @@ class DatabaseInterface
         LIMIT 25
         OFFSET ?";
 
-    protected $VERIFY_KEY_WITH_ROLE =
-        "SELECT *
+    protected $VERIFY_KEY_AND_GET_ROLE =
+        "SELECT users.user_role
          FROM   user_login_token
          CROSS JOIN users
          ON     user_id = users.id
@@ -446,8 +481,7 @@ class DatabaseInterface
          ON     users.user_role = user_roles.id
          WHERE  valid_until > NOW()
          AND    LOWER(user_token) = LOWER(?) /* the user key is always lower*/
-         AND    LOWER(users.username) = LOWER(?)
-         AND    LOWER(user_roles.role_name) = LOWER(?)";
+         AND    LOWER(users.username) = LOWER(?)";
 
     protected $VERIFY_KEY =
         "SELECT * FROM user_login_token

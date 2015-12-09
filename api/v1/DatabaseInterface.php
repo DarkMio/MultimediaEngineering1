@@ -229,8 +229,8 @@ class DatabaseInterface
      * @throws Exception
      */
     public function insertStudio($studio_name, $studio_type, $street_name, $street_nr,
-                                 $geo_long, $geo_lat, $zip, $studio_phone, $creator,
-                                 $location, $owner = null, $into_live=false) {
+                                 $geo_long, $geo_lat, $zip, $location, $studio_phone, $creator,
+                                 $owner = null, $into_live=false) {
         $owner_id = null;
         $creator_id = null;
         if($owner) { // the API is responsible for checking completeness of data
@@ -239,13 +239,15 @@ class DatabaseInterface
                 $owner["zip"], $owner["location"], $owner["phone"], $owner["type"]);
             $owner_id = $this->conn->insert_id;
         }
-        // write a new address into the database
+
+        if(!$this->verifyZip($zip, $location)) throw new Exception("Address not in register");
+        // write a new address into the databaseperson_types
         $this->__dispatch($this->INSERT_ADDRESS, "ssddis", array(&$street_name,
                           &$street_nr, &$geo_long, &$geo_lat, &$zip, &$location));
         $address_id = $this->conn->insert_id;
 
         if(isset($creator)) {
-            $creator_id = $this->__dispatch($this->SELECT_CREATOR_ID, "s", array($creator))->fetch_row();
+            $creator_id = $this->__dispatch($this->SELECT_CREATOR_ID, "s", array(&$creator))->fetch_row();
         }
 
         // Moderators can insert instantly into live

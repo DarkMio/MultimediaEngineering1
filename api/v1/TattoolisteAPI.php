@@ -110,6 +110,6 @@ class MyAPI extends API
         parent::verifyKey(2); // moderator and above
         $page = isset($r["page"]) ? $r["page"] : 0;
         $amount = isset($r["results"]) ? $r["results"] : 50;
-        return $this->db->showStaged($amount, $page);;
+        return $this->db->showStaged($amount, $page);
     }
 }

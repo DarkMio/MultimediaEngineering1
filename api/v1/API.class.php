@@ -146,7 +146,7 @@ abstract class API
             $this->checkRequest(["key", "username"]);
         } catch (Exception $e) {
             // if there are not enough params - we want to throw actually a different error.
-            throw new Exception("Not enough rights");
+            throw new Exception("Insufficient permissions");
         }
         return $this->db->verifyKey($this->request["key"], $this->request["username"], $role);
     }

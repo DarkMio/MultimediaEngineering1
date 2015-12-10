@@ -291,7 +291,22 @@ class DatabaseInterface
     }
 
     public function showStaged($amount=50, $page=0) {
-        return $this->__dispatch($this->GET_ALL_STAGED, "ii", array(&$amount, &$page))->fetch_all();
+        $result = $this->__dispatch($this->GET_ALL_STAGED, "ii", array(&$amount, &$page))->fetch_all();
+        $response = $this->map_response_multiple(["id", "name", "street", "street_nr", "zip",
+            "location", "lat", "long", "phone", "type", "description", "owner"], $result);
+        $return_val = [];
+        foreach($response as $single) {
+            if($single["owner"]) {
+                $res = $this->__dispatch($this->GET_OWNER, "i", array(&$single["owner"]))->fetch_row();
+                /*p.id, p.first_name, p.last_name, ad.street_name, ad.stree_nr,
+                    loc.zip_code, loc.location_name, ad.geo_long, ad.geo_lat,
+                    pt.person_name, pt.description*/
+                $single["owner"] = $this->map_response_single(["id", "first_name", "last_name",
+                    "street_name", "street_nr", "zip", "location", "lat", "long", "type", "description"], $res);
+                $return_val[] = $single;
+            }
+        }
+        return $return_val;
     }
 
     /*****************************************************
@@ -299,6 +314,21 @@ class DatabaseInterface
      * ------------------------------------------------- *
      * There is no indication of types and security.     *
      *****************************************************/
+    protected $GET_OWNER =
+        "SELECT     p.id, p.first_name, p.last_name, ad.street_name, ad.stree_nr,
+                    loc.zip_code, loc.location_name, ad.geo_lat, ad.geo_long,
+                    pt.person_name, pt.description
+         FROM       persons as p
+         CROSS JOIN person_types as pt
+         ON         p.type = pt.id
+         CROSS JOIN addresses as ad
+         ON         p.address = ad.id
+         CROSS JOIN locations as loc
+         ON         ad.location = loc.id
+         WHERE      p.id = ?
+         AND        LOWER(pt.person_name) = 'studio owner'
+         LIMIT      1";
+
     protected $GET_ALL_STAGED =
         "SELECT         ss.id, ss.studio_name, ad.street_name, ad.stree_nr,
                         loc.zip_code, loc.location_name, ad.geo_lat, ad.geo_long,

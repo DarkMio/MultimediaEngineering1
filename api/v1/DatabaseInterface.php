@@ -300,17 +300,17 @@ class DatabaseInterface
      * There is no indication of types and security.     *
      *****************************************************/
     protected $GET_ALL_STAGED =
-        "SELECT         *
-         FROM           studios_staging
-         CROSS JOIN 	addresses
-         ON 			studios_staging.address = addresses.id
-         CROSS JOIN 	locations
-         ON 			addresses.location = locations.id
-         LEFT OUTER JOIN persons
-         ON 			studios_staging.owner = persons.id
-         CROSS JOIN 	studio_types
-         ON 			studios_staging.studio_type = studio_types.id
-         ORDER BY       studios_staging.id
+        "SELECT         ss.id, ss.studio_name, ad.street_name, ad.stree_nr,
+                        loc.zip_code, loc.location_name, ad.geo_lat, ad.geo_long,
+                        ss.phone, st.type_name, st.description, ss.owner
+         FROM           studios_staging as ss
+         CROSS JOIN 	addresses as ad
+         ON 			ss.address = ad.id
+         CROSS JOIN 	studio_types as st
+         ON 			ss.studio_type = st.id
+         CROSS JOIN 	locations as loc
+         ON 			ad.location = loc.id
+         ORDER BY       ss.id
          LIMIT          ?
          OFFSET         ?";
 

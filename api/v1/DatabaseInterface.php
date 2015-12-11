@@ -126,6 +126,8 @@ class DatabaseInterface
      */
     public function verifyKey($key, $username, $minRole = null) {
         $result = $this->__dispatch($this->VERIFY_KEY_AND_GET_ROLE, "ss", array(&$key, &$username))->fetch_row();
+        if(count($result) == 0)
+            throw new Exception("Invalid user credentials");
         if($minRole)
             return $this->checkUserRights($minRole, $result[0]);
         return count($result) > 0;
@@ -309,11 +311,25 @@ class DatabaseInterface
         return $return_val;
     }
 
+    public function rate($score, $studio, $username, $ip) {
+        // needs ip processor and nvl logic in query
+        $this->__dispatch($this->SINGLE_RATING, "iisi", array(&$score, &$studio, &$username, &$ip));
+    }
+
     /*****************************************************
      * Following are constants containing DB statements. *
      * ------------------------------------------------- *
      * There is no indication of types and security.     *
      *****************************************************/
+    protected $SINGLE_RATING = "
+        INSERT INTO single_rating(score, studio, user_ref, created, ip)
+        VALUES      (?,
+                     ?,
+                     (SELECT id FROM users WHERE lower(username) = LOWER(?)),
+                     NOW(),
+                     ?)
+    ";
+
     protected $GET_OWNER =
         "SELECT     p.id, p.first_name, p.last_name, ad.street_name, ad.stree_nr,
                     loc.zip_code, loc.location_name, ad.geo_lat, ad.geo_long,

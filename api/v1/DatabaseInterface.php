@@ -312,8 +312,13 @@ class DatabaseInterface
     }
 
     public function rate($score, $studio, $username, $ip) {
-        // needs ip processor and nvl logic in query
-        $this->__dispatch($this->SINGLE_RATING, "iisi", array(&$score, &$studio, &$username, &$ip));
+        $has_entry = $this->__dispatch($this->SELECT_STUDIO_RATING, "i", array(&$studio))->fetch_row();
+        if(count($has_entry) == 0) {
+            $this->__dispatch($this->INSERT_FIRST_RATING, "i", array(&$studio));
+        }
+        // needs ip processor
+        $this->__dispatch($this->SINGLE_RATING, "iiss", array(&$score, &$studio, &$username, &$ip));
+        $this->__dispatch($this->UPDATE_RATING, "i", array(&$studio));
     }
 
     /*****************************************************
@@ -321,6 +326,31 @@ class DatabaseInterface
      * ------------------------------------------------- *
      * There is no indication of types and security.     *
      *****************************************************/
+    protected $INSERT_FIRST_RATING = "
+        INSERT INTO studio_ratings(studio, count, avg)
+        VALUES      (?, 0, 0)
+        ";
+
+    protected $SELECT_STUDIO_RATING = "
+        SELECT id
+        FROM studio_ratings
+        WHERE studio = ?
+        LIMIT 1
+        ";
+
+    protected $UPDATE_RATING = "
+        UPDATE      studio_ratings
+        INNER JOIN  (
+            SELECT  studio,
+                    count(score) AS c,
+                    avg(score) AS a
+            FROM    single_rating
+            WHERE   studio = ?
+          ) t1
+        ON          studio_ratings.studio = t1.studio
+        SET         count = c,
+                    avg = a";
+
     protected $SINGLE_RATING = "
         INSERT INTO single_rating(score, studio, user_ref, created, ip)
         VALUES      (?,

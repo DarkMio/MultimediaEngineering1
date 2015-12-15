@@ -112,4 +112,18 @@ class MyAPI extends API
         $amount = isset($r["results"]) ? $r["results"] : 50;
         return $this->db->showStaged($amount, $page);
     }
+
+    protected function rateStudio() {
+        $r = $this->request;
+        parent::checkRequest(["score", "studio"]);
+        $user = null;
+        if (isset($r["username"])) {
+            try {
+                $this->verifyKey();
+                $user = $r["username"];
+            } catch (Exception $e) {} // truncate error
+        }
+        $this->db->rate($r["score"], $r["studio"], $user, $_SERVER['REMOTE_ADDR']);
+        return ["status" => "success"];
+    }
 }

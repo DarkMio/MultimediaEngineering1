@@ -2,7 +2,7 @@
 --
 -- Host: 127.0.0.1    Database: tattooliste
 -- ------------------------------------------------------
--- Server version	5.6.26
+-- Server version	5.5.5-10.0.17-MariaDB-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -39,7 +39,7 @@ CREATE TABLE `user_login_token` (
 
 LOCK TABLES `user_login_token` WRITE;
 /*!40000 ALTER TABLE `user_login_token` DISABLE KEYS */;
-INSERT INTO `user_login_token` VALUES (2,11,'74eaef029b4111e587b283a9c5e21de8','2015-12-06 12:15:14'),(3,5,'2392492ae9afc2c304e4d851b7524ebf','2015-12-07 21:32:34');
+INSERT INTO `user_login_token` VALUES (3,5,'43077499062ebf502a17a4ea0803394a','2015-12-16 09:23:17'),(2,11,'74eaef029b4111e587b283a9c5e21de8','2015-12-06 12:15:14');
 /*!40000 ALTER TABLE `user_login_token` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-12-06 22:17:21
+-- Dump completed on 2015-12-15 12:22:33

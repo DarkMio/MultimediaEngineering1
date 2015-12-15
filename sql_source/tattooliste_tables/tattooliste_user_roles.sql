@@ -2,7 +2,7 @@
 --
 -- Host: 127.0.0.1    Database: tattooliste
 -- ------------------------------------------------------
--- Server version	5.6.26
+-- Server version	5.5.5-10.0.17-MariaDB-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -40,7 +40,7 @@ CREATE TABLE `user_roles` (
 
 LOCK TABLES `user_roles` WRITE;
 /*!40000 ALTER TABLE `user_roles` DISABLE KEYS */;
-INSERT INTO `user_roles` VALUES (1,NULL,'Administrator','The administrator has full control over all elemntso f the webpage.'),(2,NULL,'Moderator','The moderator has right to modify any studio or person set.\nHe is denied any kind of modification to accounts, passwords or other moderators.'),(3,NULL,'Studio Inhaber','The studio owner can modify his own (and only his own) studio information. He add other accounts as staff, which are able to modify the same data.'),(4,3,'Studio Mitarbeiter','The studio staff can do the same as the owner, besides deleting the studio entirely.'),(5,NULL,'User','A regular user is logged in and has increased vote power. (That\'s it, for now.)'),(6,NULL,'Anon','An anonymous user has little vote power, yet can add studios, which enter the staging table.');
+INSERT INTO `user_roles` VALUES (1,2,'Administrator','The administrator has full control over all elemntso f the webpage.'),(2,5,'Moderator','The moderator has right to modify any studio or person set.\nHe is denied any kind of modification to accounts, passwords or other moderators.'),(3,5,'Studio Inhaber','The studio owner can modify his own (and only his own) studio information. He add other accounts as staff, which are able to modify the same data.'),(4,3,'Studio Mitarbeiter','The studio staff can do the same as the owner, besides deleting the studio entirely.'),(5,6,'User','A regular user is logged in and has increased vote power. (That\'s it, for now.)'),(6,NULL,'Anon','An anonymous user has little vote power, yet can add studios, which enter the staging table.');
 /*!40000 ALTER TABLE `user_roles` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-12-06 22:17:20
+-- Dump completed on 2015-12-15 12:22:33

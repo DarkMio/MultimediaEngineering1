@@ -2,7 +2,7 @@
 --
 -- Host: 127.0.0.1    Database: tattooliste
 -- ------------------------------------------------------
--- Server version	5.6.26
+-- Server version	5.5.5-10.0.17-MariaDB-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -25,14 +25,13 @@ DROP TABLE IF EXISTS `studio_ratings`;
 CREATE TABLE `studio_ratings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `studio` int(11) NOT NULL,
-  `score` int(2) NOT NULL,
   `count` int(11) NOT NULL,
   `avg` double NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `studio_UNIQUE` (`studio`),
   CONSTRAINT `studio_rating_id` FOREIGN KEY (`studio`) REFERENCES `studios` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,6 +40,7 @@ CREATE TABLE `studio_ratings` (
 
 LOCK TABLES `studio_ratings` WRITE;
 /*!40000 ALTER TABLE `studio_ratings` DISABLE KEYS */;
+INSERT INTO `studio_ratings` VALUES (1,1,5,7.4);
 /*!40000 ALTER TABLE `studio_ratings` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-12-06 22:17:20
+-- Dump completed on 2015-12-15 12:22:32

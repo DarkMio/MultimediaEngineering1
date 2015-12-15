@@ -2,7 +2,7 @@
 --
 -- Host: 127.0.0.1    Database: tattooliste
 -- ------------------------------------------------------
--- Server version	5.6.26
+-- Server version	5.5.5-10.0.17-MariaDB-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -33,7 +33,7 @@ CREATE TABLE `addresses` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `location_id_idx` (`location`),
   CONSTRAINT `location_id` FOREIGN KEY (`location`) REFERENCES `locations` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +42,7 @@ CREATE TABLE `addresses` (
 
 LOCK TABLES `addresses` WRITE;
 /*!40000 ALTER TABLE `addresses` DISABLE KEYS */;
-INSERT INTO `addresses` VALUES (1,1356,'Kaiserin-Augusta-Straße','16',13.382144272327423,52.460245705805484),(2,1288,'Templiner Str.','7',13.40859,52.53304),(3,5222,'Saalburgstraße','12',8.53147,50.34146),(4,1429,'Genter Straße','66',52.54893,13.3518),(5,1356,'Studuo','15',12.382144272327423,50.460245705805484),(6,1356,'Mariendorfer Damm','12',13.38,52.44),(7,1356,'Seestraße','999a',13.4,52.2);
+INSERT INTO `addresses` VALUES (1,1356,'Kaiserin-Augusta-Straße','16',13.382144272327423,52.460245705805484),(2,1288,'Templiner Str.','7',13.40859,52.53304),(3,5222,'Saalburgstraße','12',8.53147,50.34146),(4,1429,'Genter Straße','66',52.54893,13.3518),(5,1356,'Studuo','15',12.382144272327423,50.460245705805484),(6,1356,'Mariendorfer Damm','12',13.38,52.44),(7,1356,'Seestraße','999a',13.4,52.2),(8,1356,'Blumenthalstraße','12',53,13),(9,1356,'Blumenthalstraße','12',53,13);
 /*!40000 ALTER TABLE `addresses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -148,7 +148,7 @@ CREATE TABLE `persons` (
   KEY `person_adresses_idx` (`address`),
   CONSTRAINT `person_adresses` FOREIGN KEY (`address`) REFERENCES `addresses` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `type_id` FOREIGN KEY (`type`) REFERENCES `person_types` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -172,19 +172,16 @@ CREATE TABLE `single_rating` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `score` int(2) NOT NULL,
   `studio` int(11) NOT NULL,
-  `user_type` int(11) NOT NULL,
   `user_ref` int(11) DEFAULT NULL,
   `created` datetime NOT NULL,
-  `ip` int(10) unsigned NOT NULL,
+  `ip` varchar(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
-  KEY `user_type_id_idx` (`user_type`),
   KEY `user_ref_id_idx` (`user_ref`),
   KEY `studio_id_idx` (`studio`),
   CONSTRAINT `studio_id` FOREIGN KEY (`studio`) REFERENCES `studios` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `user_ref_id` FOREIGN KEY (`user_ref`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `user_type_id` FOREIGN KEY (`user_type`) REFERENCES `user_roles` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='table to register all ratings, builds later rating-sets a secondary table - which maps on studios';
+  CONSTRAINT `user_ref_id` FOREIGN KEY (`user_ref`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COMMENT='table to register all ratings, builds later rating-sets a secondary table - which maps on studios';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -193,6 +190,7 @@ CREATE TABLE `single_rating` (
 
 LOCK TABLES `single_rating` WRITE;
 /*!40000 ALTER TABLE `single_rating` DISABLE KEYS */;
+INSERT INTO `single_rating` VALUES (1,0,1,NULL,'2015-12-15 08:11:16','0'),(2,10,1,NULL,'2015-12-15 08:11:41','0'),(3,7,1,NULL,'2015-12-15 08:17:00','0'),(4,10,1,5,'2015-12-15 10:03:06','0'),(5,10,1,5,'2015-12-15 10:06:12','::1');
 /*!40000 ALTER TABLE `single_rating` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -232,14 +230,13 @@ DROP TABLE IF EXISTS `studio_ratings`;
 CREATE TABLE `studio_ratings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `studio` int(11) NOT NULL,
-  `score` int(2) NOT NULL,
   `count` int(11) NOT NULL,
   `avg` double NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `studio_UNIQUE` (`studio`),
   CONSTRAINT `studio_rating_id` FOREIGN KEY (`studio`) REFERENCES `studios` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -248,6 +245,7 @@ CREATE TABLE `studio_ratings` (
 
 LOCK TABLES `studio_ratings` WRITE;
 /*!40000 ALTER TABLE `studio_ratings` DISABLE KEYS */;
+INSERT INTO `studio_ratings` VALUES (1,1,5,7.4);
 /*!40000 ALTER TABLE `studio_ratings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -305,7 +303,7 @@ CREATE TABLE `studios` (
   CONSTRAINT `creator_id` FOREIGN KEY (`creator`) REFERENCES `persons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `owner_id` FOREIGN KEY (`owner`) REFERENCES `persons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `studio_type_id` FOREIGN KEY (`studio_type`) REFERENCES `studio_types` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -314,8 +312,43 @@ CREATE TABLE `studios` (
 
 LOCK TABLES `studios` WRITE;
 /*!40000 ALTER TABLE `studios` DISABLE KEYS */;
-INSERT INTO `studios` VALUES (1,'True Blue Tattoo',2,1,'030 33847185',2,1,'2015-11-22 18:51:19'),(2,'Ein Studio',6,2,'4598459495',1,1,'2015-12-02 08:26:26'),(3,'Cool Cat and \'ze Hodendudler',7,2,NULL,NULL,NULL,'2015-12-02 08:29:00');
+INSERT INTO `studios` VALUES (1,'True Blue Tattoo',2,1,'030 33847185',2,1,'2015-11-22 18:51:19'),(2,'Ein Studio',6,2,'4598459495',1,1,'2015-12-02 08:26:26'),(3,'Cool Cat and \'ze Hodendudler',7,2,NULL,NULL,NULL,'2015-12-02 08:29:00'),(6,'Ein Studio',8,2,'4598459495',NULL,NULL,'2015-12-09 08:47:55');
 /*!40000 ALTER TABLE `studios` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `studios_staging`
+--
+
+DROP TABLE IF EXISTS `studios_staging`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `studios_staging` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `studio_name` varchar(100) NOT NULL,
+  `address` int(11) NOT NULL,
+  `studio_type` int(11) NOT NULL,
+  `phone` varchar(15) DEFAULT NULL,
+  `owner` int(11) DEFAULT NULL,
+  `creator` int(11) DEFAULT NULL,
+  `created` datetime NOT NULL,
+  PRIMARY KEY (`id`,`studio_name`,`address`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `adress_id_idx` (`address`),
+  KEY `studio_type_id_idx` (`studio_type`),
+  KEY `owner_id_idx` (`owner`),
+  KEY `creator_id_idx` (`creator`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `studios_staging`
+--
+
+LOCK TABLES `studios_staging` WRITE;
+/*!40000 ALTER TABLE `studios_staging` DISABLE KEYS */;
+INSERT INTO `studios_staging` VALUES (1,'Ein Studio',0,2,'Berlin',NULL,NULL,'2015-12-09 08:22:08'),(2,'Ein Studio',8,2,'Berlin',2,NULL,'2015-12-09 08:30:17'),(3,'Ein neues Studio',9,2,'4598459495',2,NULL,'2015-12-10 08:31:51');
+/*!40000 ALTER TABLE `studios_staging` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -342,7 +375,7 @@ CREATE TABLE `user_login_token` (
 
 LOCK TABLES `user_login_token` WRITE;
 /*!40000 ALTER TABLE `user_login_token` DISABLE KEYS */;
-INSERT INTO `user_login_token` VALUES (2,11,'74eaef029b4111e587b283a9c5e21de8','2015-12-06 12:15:14'),(3,5,'2392492ae9afc2c304e4d851b7524ebf','2015-12-07 21:32:34');
+INSERT INTO `user_login_token` VALUES (3,5,'43077499062ebf502a17a4ea0803394a','2015-12-16 09:23:17'),(2,11,'74eaef029b4111e587b283a9c5e21de8','2015-12-06 12:15:14');
 /*!40000 ALTER TABLE `user_login_token` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -371,7 +404,7 @@ CREATE TABLE `user_roles` (
 
 LOCK TABLES `user_roles` WRITE;
 /*!40000 ALTER TABLE `user_roles` DISABLE KEYS */;
-INSERT INTO `user_roles` VALUES (1,NULL,'Administrator','The administrator has full control over all elemntso f the webpage.'),(2,NULL,'Moderator','The moderator has right to modify any studio or person set.\nHe is denied any kind of modification to accounts, passwords or other moderators.'),(3,NULL,'Studio Inhaber','The studio owner can modify his own (and only his own) studio information. He add other accounts as staff, which are able to modify the same data.'),(4,3,'Studio Mitarbeiter','The studio staff can do the same as the owner, besides deleting the studio entirely.'),(5,NULL,'User','A regular user is logged in and has increased vote power. (That\'s it, for now.)'),(6,NULL,'Anon','An anonymous user has little vote power, yet can add studios, which enter the staging table.');
+INSERT INTO `user_roles` VALUES (1,2,'Administrator','The administrator has full control over all elemntso f the webpage.'),(2,5,'Moderator','The moderator has right to modify any studio or person set.\nHe is denied any kind of modification to accounts, passwords or other moderators.'),(3,5,'Studio Inhaber','The studio owner can modify his own (and only his own) studio information. He add other accounts as staff, which are able to modify the same data.'),(4,3,'Studio Mitarbeiter','The studio staff can do the same as the owner, besides deleting the studio entirely.'),(5,6,'User','A regular user is logged in and has increased vote power. (That\'s it, for now.)'),(6,NULL,'Anon','An anonymous user has little vote power, yet can add studios, which enter the staging table.');
 /*!40000 ALTER TABLE `user_roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -418,4 +451,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-12-06 22:17:42
+-- Dump completed on 2015-12-15 12:22:53

@@ -15,9 +15,12 @@
     <script>
         //debugAPI("login", {username: "darkmio", password: "1337s1mpl3x"});
         //debugAPI("getAllStudios", {username: "darkmio", key: "b16de9bc233b1dd736ff83c6d2af1db5"});
-        debugAPIText("hintLocations", {zip: "133"}).then(function ( data ){
+        login("DarkMio", "1337s1mpl3x").then(function (data) {
             $('#contents').text(data);
         });
+        //debugAPIText("hintLocations", {zip: "133"}).then(function ( data ){
+        //    $('#contents').text(data);
+        // });
     </script>
 </head>
 <body>

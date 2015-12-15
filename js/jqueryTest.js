@@ -31,3 +31,9 @@ function debugAPIText(endnode, parameters) {
     });
     return val;
 }
+
+function login(username, password) {
+    return debugAPI("login", {username: username, password: password}).then(function(data){
+        return "Username: "+ data["request"]["username"] + " | Token: " + data["response"]["token"];
+    })
+}

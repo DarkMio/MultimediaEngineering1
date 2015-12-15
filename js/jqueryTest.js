@@ -17,17 +17,17 @@ function request() {
 
 function debugAPI(endnode, parameters) {
     var api_url = "http://localhost/mme/api/v1/" + endnode;
-
     var testString = "";
     $.each(parameters, function (key, value) {
         testString += key+"="+value+"&";
-        console.log(key);
-        console.log(value);
     });
     testString = testString.substring(0, testString.length - 1);
-    console.log("PARAMETERS: " + testString);
-    console.log("FULL URL:   " + api_url + "?" + testString);
-    $.getJSON(api_url + "?" + testString, function (data) {
-        console.log(data);
+    return $.getJSON(api_url + "?" + testString);
+}
+
+function debugAPIText(endnode, parameters) {
+    var val = debugAPI(endnode, parameters).then(function (data, status, jqXHR) {
+        return jqXHR.responseText;
     });
+    return val;
 }

@@ -68,7 +68,7 @@ function hintDaLocations(zip){
 
 function showStagedStudios(username, token){
     return debugAPI("showStaged", {username: username, key: token}).then(function(data){
-        return data["response"];
+        return JSON.stringify(data);
     })
     // needs some work, does not work yet with output, only shows Objects
 }
@@ -82,4 +82,11 @@ function addStudioKappa(studio_street_nr, studio_name, studio_type, studio_stree
         return JSON.stringify(data);
     })
 }
-//works theoretically, but addStudio is broken?
+//works but what should we return here?
+
+function rateStudioKappa(score, studio, username, token){
+    return debugAPI("rateStudio", {score: score, studio: studio, username: username, key: token}).then(function (data){
+        return JSON.stringify(data);
+    })
+}
+//works but what should we return here?

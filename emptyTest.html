@@ -15,12 +15,32 @@
     <script>
         //debugAPI("login", {username: "darkmio", password: "1337s1mpl3x"});
         //debugAPI("getAllStudios", {username: "darkmio", key: "b16de9bc233b1dd736ff83c6d2af1db5"});
-        login("DarkMio", "1337s1mpl3x").then(function (data) {
-            $('#contents').text(data);
-        });
+        //login("DarkMio", "1337s1mpl3x").then(function (data) {
+        //    $('#contents').text(data);
+        //});
         //debugAPIText("hintLocations", {zip: "133"}).then(function ( data ){
         //    $('#contents').text(data);
         // });
+        //findStudios(13.382144272327423 ,52.460245705805484, 50).then(function (data){
+        //      $('#contents').text(data);
+        //})
+//        verifyLocation(13353, "Berlin").then(function (data){
+//                    $('#contents').text(data);
+//        })
+        //registerUserino("test1234", "123").then(function (data){
+         //         $('#contents').text(data);
+        //})
+
+//        hintDaLocations("1335").then(function (data){
+//                $('#contents').text(data);
+//        })
+
+           //   showStagedStudios("darkmio", "d63f15a413d1074546a80615e9f673d4").then(function (data){
+           //           $('#contents').text(data);
+           //   });
+        addStudioKappa("66", "Wendland Ink", "Tattoos", "Genter Straße", "25", "25", "13353", "Berlin").then(function (data){
+                        $('#contents').text(data);
+        })
     </script>
 </head>
 <body>

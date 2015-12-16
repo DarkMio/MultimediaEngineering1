@@ -86,7 +86,7 @@ class MyAPI extends API
                     "geo_long" => $r["owner_long"],
                     "geo_lat" => $r["owner_lat"],
                     "zip" => $r["owner_zip"],
-                    "locarion" => $r["owner_location"],
+                    "location" => $r["owner_location"],
                     "phone" => isset($r["owner_phone"]) ? $r["owner_phone"] : null,
                     "creator" => isset($r["creator"]) ? $r["creator"] : null,
                 ];

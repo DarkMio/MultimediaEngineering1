@@ -1,5 +1,7 @@
 <?php
 
+include "APIExceptions.php";
+
 class DatabaseInterface
 {
     /**
@@ -168,7 +170,7 @@ class DatabaseInterface
         // check if a username is already given...
         $result = $this->__dispatch($this->SELECT_SINGLE_USER, "s", array(&$username))->fetch_all();
         if(count($result) > 0)
-            throw new Exception("Username exists already.");
+            throw new FailStateException(["Exception" => "Username exists already."]);
         // encrypt his password
         $hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 11]);
         if ($hash == false)

@@ -88,6 +88,8 @@ abstract class API
         if (method_exists($this, $this->endpoint)) {
             try {
                 return $this->_response($this->{$this->endpoint}($this->args));
+            } catch (FailStateException $e) {
+                return $this->_response($e->GetOptions(), 200);
             } catch (APIException $e) {
               return $this->_response($e->getOptions(), 400);
             } catch (Exception $e) {
@@ -168,4 +170,3 @@ class APIException extends \Exception
 
     public function GetOptions() { return $this->_options; }
 }
-

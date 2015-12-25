@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>View Studio Example</title>
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="container">
+            <br />
+            <div class="jumbotron">
+                <h1 class="center-block">Gefunded Studios</h1>
+                <br />
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+                ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo
+                dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor
+                sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
+                tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>Plz</th>
+                        <th>Name</th>
+                        <th>Hausnummer</th>
+                        <th>Ort</th>
+                        <th>Bewertung</th>
+                    </tr>
+                    </thead>
+                    <tr>
+                        <td>12103</td>
+                        <td>Mio Moto</td>
+                        <td>Blumenthalstr. 15</td>
+                        <td>Berlin-Tempelhof</td>
+                        <td><div id="rating-1"></div></td>
+                    </tr>
+                    <tr>
+                        <td>16784</td>
+                        <td>Testdata</td>
+                        <td>67 a</td>
+                        <td>Berlin</td>
+                        <td><div id="rating-2"></div></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="../static/js/jquery-1.11.3.min.js" ></script>
+<script src="../static/js/jqueryTest.js" ></script>
+<script src="../static/js/jquery.raty.js"></script>
+<script>
+    $.fn.raty.defaults.path = '../static/images';
+    $.fn.raty.defaults.half = true;
+    $('#rating-2').raty({score: 5.});
+    $('#rating-1').raty({score: 3.25});
+</script>
+</html>

@@ -22,7 +22,7 @@ class MyAPI extends API
         return $this->db->get_all_studios();
     }
 
-    protected function amimod() {
+    protected function amIMod() {
         return parent::verifyKey(2);
     }
 
@@ -40,10 +40,13 @@ class MyAPI extends API
     }
 
     protected function register() {
+        return ["info" => "Currently not supported and is disabled."];
+/*
         parent::checkRequest(["password", "username"]);
         $this->db->registerUser($this->request["password"], $this->request["username"]);
         // if it didn't throw an error - then it worked.
         return ["register" => "success"];
+*/
     }
 
     protected function login() {

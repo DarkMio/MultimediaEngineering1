@@ -15,7 +15,7 @@ function getRequest(url, params, callback) {
 function requireLogin() {
     if (!Cookies.get("token")) {
         var require = '<div id="login-required" class="alert alert-warning alert-dismissable flyover">' +
-            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true" onclick="$(\'#login-required\').hide();">'+
+            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true" onclick="$(\'#login-required\').toggleClass(\'in\');">'+
             '×</button><strong>Warning!</strong> You are not logged in and tried to access a secured resource.</div>';
         $(require).appendTo('body');
         $('#login-required').toggleClass('in');

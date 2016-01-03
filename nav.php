@@ -16,7 +16,7 @@
         $nav = explode(":", $row);                                  // data set now ['name', 'target']
         $page = trim($nav[0]);                                      // get rid of whitespaces before and after
         $link = trim($nav[1]);                                      // same here
-        if($link == $base) {                                        // compare link with base url
+        if($link == $base) {                                        // compare link with base api_url
             echo '<li class="active"><a>' . $page . '</a></li>';    // concat - kek, with a dot...
         } else {
             echo '<li><a href="' . $link . '">' . $page . '</a></li>';

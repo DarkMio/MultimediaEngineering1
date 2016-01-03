@@ -32,6 +32,7 @@ function debugAPIText(endnode, parameters) {
     return val;
 }
 
+
 function findStudios(long, lat, distance){
     return debugAPI("findStudios", {long: long, lat: lat, distance: distance}).then(function(data){
         return "Longitude: "+ data["request"]["long"] + " | Latitude: " + data["request"]["lat"]

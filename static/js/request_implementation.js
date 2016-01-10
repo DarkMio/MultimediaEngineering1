@@ -37,3 +37,9 @@ function login(username, password, callback) {
         callback(success)
     })
 }
+
+function showStaged(username, token, callback) {
+    getRequest(url + "showStaged", {username: username, token: token}, function data(response) {
+        callback(response)
+    })
+}

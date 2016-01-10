@@ -65,6 +65,13 @@
 
 </body>
 <script src="../static/js/jquery-1.11.3.min.js"></script>
-<script src="../static/js/jqueryTest.js"></script>
+<script src="../static/js/request_implementation.js"></script>
 <script src="../bootstrap/js/bootstrap.min.js"></script>
+<script src="../static/js/js.cookie.js"></script>
+<script> $(function(){
+    requireLogin();
+    showStaged(Cookies.get("username"), Cookies.get("token"), function(response) {
+        console.log(response);
+})})
+</script>
 </html>

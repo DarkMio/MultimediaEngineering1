@@ -104,7 +104,7 @@ class DatabaseInterface
             $result = $this->__dispatch($this->GET_STUDIOS_IN_RANGE_WITHOUT_OFFSET, "", array())->fetch_all();
         }
         if($result) {
-            return $this->map_response_multiple(["studio_name", "phone", "zip", "location", "street_name",
+            return $this->map_response_multiple(["id", "studio_name", "phone", "zip", "location", "street_name",
                "street_number", "forename", "name", "studio_description", "distance"], $result);
         }
         return ($result);
@@ -476,7 +476,8 @@ class DatabaseInterface
          VALUES (?, ?, ?, ?, (SELECT id FROM locations WHERE zip_code = ? AND LOWER(location_name) = LOWER(?)))";
 
     protected $GET_STUDIOS_IN_RANGE_WITHOUT_OFFSET =
-        "SELECT studios.studio_name,
+        "SELECT studios.id,
+                studios.studio_name,
                 studios.phone,
                 locations.zip_code,
                 locations.location_name,
@@ -514,7 +515,8 @@ class DatabaseInterface
         LIMIT 0,25";
 
     protected $GET_STUDIOS_IN_RANGE_WITH_OFFSET =
-        "SELECT studios.studio_name,
+        "SELECT studios.id,
+                studios.studio_name,
                 studios.phone,
                 locations.zip_code,
                 locations.location_name,

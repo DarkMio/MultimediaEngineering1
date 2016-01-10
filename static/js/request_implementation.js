@@ -27,9 +27,9 @@ function requireLogin() {
     }
 }
 
-function findStudios(long, lat, distance){
-    getRequest(api_url + "findStudios", {long: long, lat: lat, distance: distance}, function data(a, b) {
-        console.log(a, b);
+function findStudios(long, lat, distance, callback){
+    getRequest(api_url + "findStudios", {long: long, lat: lat, distance: distance}, function data(response) {
+        callback(response);
     })
 }
 

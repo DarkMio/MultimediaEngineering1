@@ -81,7 +81,7 @@ abstract class API
                 break;
         }
 
-        $this->db = new DatabaseInterface("localhost", "root", "", "tattooliste");
+        $this->db = new DatabaseInterface("localhost", "root", "1337s1mpl3x", "tattooliste");
     }
 
     public function processAPI() {

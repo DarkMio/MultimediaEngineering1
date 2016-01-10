@@ -10,25 +10,31 @@
 <div class="container-fluid">
     <div class="row">
         <div class="container">
-            <form class="form-horizontal" action="form_response.php" method="post">
+            <form class="form-horizontal col-lg-8" action="form_response.php" method="post">
                 <fieldset>
                     <legend>Ein neues Studio registrieren:</legend>
                     <div class="form-group">
                         <label for="Name" class="col-lg-2 control-label">Name *</label>
                         <div class="col-lg-10">
-                            <input class="form-control" id="Name" placeholder="Studioname" type="text" name="studioName" required>
+                            <input class="form-control" id="studioName" placeholder="Studioname" type="text" name="studioName" required>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="Ort" class="col-lg-2 control-label">Plz Ort *</label>
-                        <div class="col-lg-10">
-                            <input class="form-control" id="Ort" placeholder="Postleitzahl Ort" type="text" name="studioLocation" pattern="[0-9]{5}\s[\u00C0-\u017Fa-zA-Z'][\u00C0-\u017Fa-zA-Z-' ]+" required>
+                        <div class="col-lg-2">
+                            <input class="form-control col-lg-3" id="studioZip" placeholder="Plz" type="text" name="studioZip" pattern="[0-9]{5}\s[\u00C0-\u017Fa-zA-Z'][\u00C0-\u017Fa-zA-Z-' ]+" required>
+                        </div>
+                        <div class="col-lg-8">
+                            <input class="form-control col-lg-5" id="studioLocation" placeholder="Ortsname" type="text" name="studioLocation" pattern="\d+" required>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="Straße" class="col-lg-2 control-label">Anschrift *</label>
-                        <div class="col-lg-10">
-                            <input class="form-control" id="Straße" placeholder="Hausnummer Straße" type="text" name="studioAddress" pattern="[\u00C0-\u017Fa-zA-Z-'\s]+\s[0-9]+[\w]" required>
+                        <div class="col-lg-8">
+                            <input class="form-control" id="studioStreet" placeholder="Straße" type="text" name="studioStreet" pattern="[\u00C0-\u017Fa-zA-Z-'\s]+\s[0-9]+[\w]" required>
+                        </div>
+                        <div class="col-lg-2">
+                            <input class="form-control col-lg-5" id="studioStreetNr" placeholder="Nr" type="text" name="studioLocation" pattern="\d+" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -38,23 +44,10 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="Straße" class="col-lg-2 control-label">Webseite</label>
-                        <div class="col-lg-10">
-                            <input class="form-control" id="URL" placeholder="URL / Facebook / @Twitter" type="url" name="studioURL">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="Mail" class="col-lg-2 control-label">E-Mail</label>
-                        <div class="col-lg-10">
-                            <input class="form-control" id="Mail" placeholder="E-Mail Adresse" type="email" name="studioMail">
-                        </div>
-                    </div>
-                    <div class="form-group">
                         <label for="Submitter" class="col-lg-2 control-label">Eingetragen als</label>
                         <div class="col-lg-10">
                             <select class="form-control accordion-dropdown" id="select" name="submitType">
                                 <option value="withAddress studio">Studio Inhaber</option>
-                                <option value="withAddress user">Gast</option>
                                 <option value="withoutAddress" selected="selected">Anonym</option>
                             </select>
                         </div>
@@ -69,28 +62,25 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="Ort" class="col-lg-2 control-label">Plz Ort</label>
-                                    <div class="col-lg-10">
-                                        <input class="form-control" id="Ort" placeholder="Postleitzahl Ort" type="text" name="userLocation" pattern="[0-9]{5}\s[\u00C0-\u017Fa-zA-Z-' ]+">
+                                    <label for="Ort" class="col-lg-2 control-label">Plz Ort *</label>
+                                    <div class="col-lg-2">
+                                        <input class="form-control col-lg-3" id="ownerZip" placeholder="Plz" type="text" name="studioZip" pattern="[0-9]{5}\s[\u00C0-\u017Fa-zA-Z'][\u00C0-\u017Fa-zA-Z-' ]+" required>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <input class="form-control col-lg-5" id="ownerLocation" placeholder="Ortsname" type="text" name="studioLocation" pattern="\d+" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="Straße" class="col-lg-2 control-label">Anschrift</label>
+                                    <label for="Straße" class="col-lg-2 control-label">Telefon</label>
                                     <div class="col-lg-10">
-                                        <input class="form-control" id="Straße" placeholder="Straße Hausnummer" type="text" name="userAddress" pattern="[\u00C0-\u017Fa-zA-Z-'\s]+\s[0-9]+[\w]">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="E-Mail" class="col-lg-2 control-label">E-Mail</label>
-                                    <div class="col-lg-10">
-                                        <input class="form-control" id="Mail" placeholder="E-Mail Adresse" type="email" name="userMail">
+                                        <input class="form-control" id="Telefon" placeholder="Telefonnummer" type="tel" name="studioPhone" pattern="^(?:0|\(?\+33\)?\s?|0033\s?)[1-79](?:[\.\-\s]?\d\d){4}$">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="Ort" class="col-lg-2 control-label"></label>
+                        <label for="name" class="col-lg-2 control-label"></label>
                         <div class="col-lg-10">
                             <div class="g-recaptcha" data-size="normal" data-sitekey="6Ldahw8TAAAAAA_WVGzpXB9oRwILwfyjeppNfDOl"></div>
                         </div>

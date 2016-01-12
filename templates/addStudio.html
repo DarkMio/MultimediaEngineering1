@@ -10,45 +10,68 @@
 <div class="container-fluid">
     <div class="row">
         <div class="container">
-            <form class="form-horizontal col-lg-8" action="form_response.php" method="post">
+            <form class="form-horizontal col-lg-8" id="insert-form" method="get">
                 <fieldset>
                     <legend>Ein neues Studio registrieren:</legend>
                     <div class="form-group">
-                        <label for="Name" class="col-lg-2 control-label">Name *</label>
+                        <label for="studio-name" class="col-lg-2 control-label">Name <span class="text-danger">*</span></label>
                         <div class="col-lg-10">
-                            <input class="form-control" id="studioName" placeholder="Studioname" type="text" name="studioName" required>
+                            <input class="form-control" id="studio-name" placeholder="Studioname" type="text"
+                                   name="studioName" required>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="Ort" class="col-lg-2 control-label">Plz Ort *</label>
+                        <label for="owner-info" class="col-lg-2 control-label">Studio Typ <span class="text-danger">*</span></label>
+                        <div class="col-lg-10">
+                            <select class="form-control" id="studio-type" name="submitType">
+                                <option value="Tattoos" selected>Tattoos</option>
+                                <option value="Pircings">Pircings</option>
+                                <option value="Body Modification">Body Modification</option>
+                                <option value="Permanent Makeup">Permanent Makeup</option>
+                                <option value="Brandings">Brandings</option>
+                                <option value="Jewellery">Schmuckverkauf</option>
+                                <option value="Stamps">Stamps</option>
+                                <option value="Tattoo Removal">Tattoo Entfernung</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="studio-street-name" class="col-lg-2 control-label">Anschrift <span
+                                class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <input class="form-control" id="studio-street-name" placeholder="Straße" type="text"
+                                   name="studioStreet" required>
+                        </div>
                         <div class="col-lg-2">
-                            <input class="form-control col-lg-3" id="studioZip" placeholder="Plz" type="text" name="studioZip" pattern="[0-9]{5}\s[\u00C0-\u017Fa-zA-Z'][\u00C0-\u017Fa-zA-Z-' ]+" required>
+                            <input class="form-control col-lg-5" id="studio-street-nr" placeholder="Nr" type="text"
+                                   name="studioLocation" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="studio-location" class="col-lg-2 control-label">Plz Ort <span
+                                class="text-danger">*</span></label>
+                        <div class="col-lg-2">
+                            <input class="form-control col-lg-3" id="studio-zip" placeholder="Plz" type="text"
+                                   name="studioZip" required>
                         </div>
                         <div class="col-lg-8">
-                            <input class="form-control col-lg-5" id="studioLocation" placeholder="Ortsname" type="text" name="studioLocation" pattern="\d+" required>
+                            <input class="form-control col-lg-5" id="studio-location" placeholder="Ortsname" type="text"
+                                   name="studioLocation" required>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="Straße" class="col-lg-2 control-label">Anschrift *</label>
-                        <div class="col-lg-8">
-                            <input class="form-control" id="studioStreet" placeholder="Straße" type="text" name="studioStreet" pattern="[\u00C0-\u017Fa-zA-Z-'\s]+\s[0-9]+[\w]" required>
-                        </div>
-                        <div class="col-lg-2">
-                            <input class="form-control col-lg-5" id="studioStreetNr" placeholder="Nr" type="text" name="studioLocation" pattern="\d+" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="Straße" class="col-lg-2 control-label">Telefon</label>
+                        <label for="studio-phone" class="col-lg-2 control-label">Telefon</label>
                         <div class="col-lg-10">
-                            <input class="form-control" id="Telefon" placeholder="Telefonnummer" type="tel" name="studioPhone" pattern="^(?:0|\(?\+33\)?\s?|0033\s?)[1-79](?:[\.\-\s]?\d\d){4}$">
+                            <input class="form-control" id="studio-phone" placeholder="Telefonnummer" type="tel"
+                                   name="studioPhone">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="Submitter" class="col-lg-2 control-label">Eingetragen als</label>
+                        <label for="owner-info" class="col-lg-2 control-label">Inhaber</label>
                         <div class="col-lg-10">
-                            <select class="form-control accordion-dropdown" id="select" name="submitType">
-                                <option value="withAddress studio">Studio Inhaber</option>
-                                <option value="withoutAddress" selected="selected">Anonym</option>
+                            <select class="form-control accordion-dropdown" id="owner-info" name="submitType">
+                                <option value="withAddress true">eintragen</option>
+                                <option value="withoutAddress false" selected="selected">nicht eintragen</option>
                             </select>
                         </div>
                     </div>
@@ -56,59 +79,93 @@
                         <div class="accordion-group">
                             <div class="panel-collapse collapse" id="userInfo">
                                 <div class="form-group">
-                                    <label for="Name" class="col-lg-2 control-label">Name</label>
+                                    <label for="owner-name" class="col-lg-2 control-label">Name <span
+                                            class="text-danger">*</span></label>
                                     <div class="col-lg-10">
-                                        <input class="form-control" id="Name" placeholder="Name / Kürzel" type="text" name="userName" pattern="[\u00C0-\u017Fa-zA-Z-']+\w[\u00C0-\u017Fa-zA-Z-']">
+                                        <input class="form-control" id="owner-name" placeholder="Name / Kürzel"
+                                               type="text" name="userName">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="Ort" class="col-lg-2 control-label">Plz Ort *</label>
+                                    <label for="owner-street-name" class="col-lg-2 control-label">Anschrift <span
+                                            class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input class="form-control" id="owner-street-name" placeholder="Straße"
+                                               type="text" name="studioStreet">
+                                    </div>
                                     <div class="col-lg-2">
-                                        <input class="form-control col-lg-3" id="ownerZip" placeholder="Plz" type="text" name="studioZip" pattern="[0-9]{5}\s[\u00C0-\u017Fa-zA-Z'][\u00C0-\u017Fa-zA-Z-' ]+" required>
+                                        <input class="form-control col-lg-5" id="owner-street-nr" placeholder="Nr"
+                                               type="text" name="studioLocation">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="owner-location" class="col-lg-2 control-label">Plz Ort <span
+                                            class="text-danger">*</span></label>
+                                    <div class="col-lg-2">
+                                        <input class="form-control col-lg-3" id="owner-zip" placeholder="Plz"
+                                               type="text" name="studioZip">
                                     </div>
                                     <div class="col-lg-8">
-                                        <input class="form-control col-lg-5" id="ownerLocation" placeholder="Ortsname" type="text" name="studioLocation" pattern="\d+" required>
+                                        <input class="form-control col-lg-5" id="owner-location" placeholder="Ortsname"
+                                               type="text" name="studioLocation">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="Straße" class="col-lg-2 control-label">Telefon</label>
+                                    <label for="owner-phone" class="col-lg-2 control-label">Telefon</label>
                                     <div class="col-lg-10">
-                                        <input class="form-control" id="Telefon" placeholder="Telefonnummer" type="tel" name="studioPhone" pattern="^(?:0|\(?\+33\)?\s?|0033\s?)[1-79](?:[\.\-\s]?\d\d){4}$">
+                                        <input class="form-control" id="owner-phone" placeholder="Telefonnummer"
+                                               type="tel" name="studioPhone">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="name" class="col-lg-2 control-label"></label>
+                        <label for="g-recaptcha" class="col-lg-2 control-label"></label>
                         <div class="col-lg-10">
-                            <div class="g-recaptcha" data-size="normal" data-sitekey="6Ldahw8TAAAAAA_WVGzpXB9oRwILwfyjeppNfDOl"></div>
+                            <div class="g-recaptcha" data-size="normal"
+                                 data-sitekey="6Ldahw8TAAAAAA_WVGzpXB9oRwILwfyjeppNfDOl"></div>
                         </div>
                     </div>
-                    <div class="col-lg-12 text-right">
-                        <button type="reset" class="btn btn-warning">Reset</button>
-                        <button type="submit" class="btn btn-primary submit" value="send">Absenden</button>
+                    <div class="row">
+                        <label for="owner-phone" class="col-lg-2 control-label"></label>
+                        <div class="col-lg-10">
+                            <button type="reset" class="btn btn-warning">Reset</button>
+                            <button type="submit" class="btn btn-primary submit" value="send">Absenden</button>
+                            <p>
+                                <small>Felder mit einer <span class="text-danger">*</span> Makierung sind Pflichtfelder.
+                                </small>
+                            </p>
+                        </div>
                     </div>
+                    <div class="col-lg-12 text-left">
+
+                    </div>
+                </fieldset>
+            </form>
         </div>
-        </fieldset>
-        </form>
     </div>
-</div>
 </div>
 </body>
 <script src="../static/js/jquery-1.11.3.min.js"></script>
-<script src="../static/js/jqueryTest.js"></script>
+<script src="../static/js/js.cookie.js"></script>
+<script src="../static/js/request_implementation.js"></script>
 <script src="../bootstrap/js/bootstrap.min.js"></script>
 <script src="../bootstrap/js/transition.js"></script>
 <script src='https://www.google.com/recaptcha/api.js'></script>
 <script>
-    $( document ).ready(function() {
-        $("#select").change(function(){
-            if ( $(this).val().indexOf("withAddress") != -1){
+    $(function () {
+        $("#owner-info").change(function () {
+            if ($(this).val().indexOf("withAddress") != -1) {
                 $('#userInfo').collapse('show');
             } else {
                 $('#userInfo').collapse('hide');
             }
+        });
+
+        $("#insert-form").submit(function (e) {
+            e.preventDefault();
+            insertFormRequest();
         })
     });
 </script>

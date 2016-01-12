@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>Add Example</title>
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/select2.css">
 </head>
 <body>
 <div class="container-fluid">
@@ -50,11 +51,13 @@
                     <div class="form-group">
                         <label for="studio-location" class="col-lg-2 control-label">Plz Ort <span
                                 class="text-danger">*</span></label>
-                        <div class="col-lg-2">
-                            <input class="form-control col-lg-3" id="studio-zip" placeholder="Plz" type="text"
-                                   name="studioZip" required>
+                        <div class="col-lg-3">
+                            <select class="dropdown form-control" id="studio-zip">
+                                <option data-placeholder="Plz"></option>
+                            </select>
                         </div>
-                        <div class="col-lg-8">
+
+                        <div class="col-lg-7">
                             <input class="form-control col-lg-5" id="studio-location" placeholder="Ortsname" type="text"
                                    name="studioLocation" required>
                         </div>
@@ -149,6 +152,7 @@
 </body>
 <script src="../static/js/jquery-1.11.3.min.js"></script>
 <script src="../static/js/js.cookie.js"></script>
+<script src="../static/js/select2.full.min.js"></script>
 <script src="../static/js/request_implementation.js"></script>
 <script src="../bootstrap/js/bootstrap.min.js"></script>
 <script src="../bootstrap/js/transition.js"></script>
@@ -167,27 +171,109 @@
             e.preventDefault();
             insertFormRequest();
         });
+        var $ajax = $("#studio-zip");
 
-        $("#studio-zip").select2({
-                cache: true,
-                ajax: {
+        $ajax.select2({
+            // placeholder: "Plz", // - seems to be buggy.
+            ajax: {
                 url: api_url + "hintLocations",
                 dataType: 'json',
                 delay: 250,
                 data: function (params) {
                     return {zip: params.term};
                 },
-                processResult: function (data, params) {
+                processResults: function (data) {
+                    var resultset = [];
+                    data.response.forEach(function(token) {
+                        resultset.push({
+                            name: token[0],
+                            id: token[1]
+                        });
+                    });
                     return {
-                        results:data.items["response"]
-                    }
-                }
+                        results: resultset,
+                        pagination: {more: false}};
+                },
+                cache: true
             },
             escapeMarkup: function(markup) { return markup; },
-            minimumInputLenght: 3,
+            minimumInputLength: 3,
+            templateResult: formatResult,
+            templateSelection: formatSelection
+        });
+
+        function formatResult (repo) {
+            if (repo.loading) return repo.text;
+            return "<div class='select2-results clearfix'>" + repo.id + " " + repo.name + "</div>";
+        }
+
+        function formatSelection (zips) {
+            $("#studio-location").val(zips.name);
+            console.log(zips.name);
+            return zips.id;
+        }
+
+
+        function formatRepo (repo) {
+            if (repo.loading) return repo.text;
+
+            var markup = "<div class='select2-result-repository clearfix'>" +
+                    "<div class='select2-result-repository__avatar'><img src='" + repo.owner + "' /></div>" +
+                    "<div class='select2-result-repository__meta'>" +
+                    "<div class='select2-result-repository__title'>" + repo.location + "</div>";
+
+            if (repo.description) {
+                markup += "<div class='select2-result-repository__description'>" + repo.zip + "</div>";
+            }
+
+            markup += "<div class='select2-result-repository__statistics'>" +
+                    "<div class='select2-result-repository__forks'><i class='fa fa-flash'></i> " + repo.forks_count + " Forks</div>" +
+                    "<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> " + repo.stargazers_count + " Stars</div>" +
+                    "<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i> " + repo.watchers_count + " Watchers</div>" +
+                    "</div>" +
+                    "</div></div>";
+
+            return markup;
+        }
+
+        function formatRepoSelection (repo) {
+            return repo.full_name || repo.text;
+        }
+/*
+        var $ajax = $("#studio-zip");
+
+        $ajax.select2({
+            ajax: {
+                url: "https://api.github.com/search/repositories",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function (data, params) {
+                    // parse the results into the format expected by Select2
+                    // since we are using custom formatting functions we do not need to
+                    // alter the remote JSON data, except to indicate that infinite
+                    // scrolling can be used
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data.items,
+                        pagination: {
+                            more: (params.page * 30) < data.total_count
+                        }
+                    };
+                },
+                cache: true
+            },
+            escapeMarkup: function (markup) { return markup; },
+            minimumInputLength: 1,
             templateResult: formatRepo,
-            templateSlection: fomatRepoSelection
-        })
+            templateSelection: formatRepoSelection
+        });*/
     });
 </script>
 </html>

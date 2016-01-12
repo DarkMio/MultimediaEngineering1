@@ -64,8 +64,7 @@ function insertFormRequest() {
     var params = $.extend({}, input, getLogin());
     getRequest(api_url + "addStudio", params, callback());
 
-    function collectInput() { // it doesn't matter if there is input:
-                               //    server checks, and request can be sent with empty vals
+    function collectInput() { // cleans up empty fields on its own.
         var studio = inputHelper('studio');
         studio['studio_type'] = $('#studio-type').val();
         var owner = inputHelper('owner');

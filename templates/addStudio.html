@@ -166,6 +166,27 @@
         $("#insert-form").submit(function (e) {
             e.preventDefault();
             insertFormRequest();
+        });
+
+        $("#studio-zip").select2({
+                cache: true,
+                ajax: {
+                url: api_url + "hintLocations",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {zip: params.term};
+                },
+                processResult: function (data, params) {
+                    return {
+                        results:data.items["response"]
+                    }
+                }
+            },
+            escapeMarkup: function(markup) { return markup; },
+            minimumInputLenght: 3,
+            templateResult: formatRepo,
+            templateSlection: fomatRepoSelection
         })
     });
 </script>

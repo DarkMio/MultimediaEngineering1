@@ -16,15 +16,21 @@ function getRequest(url, params, callback) {
     );
 }
 
+function spawnRibbon(id, type, text) {
+    var require = '<div id="' + id + '" class="alert alert-warning alert-dismissable flyover">' +
+        '<button type="button" class="close" data-dismiss="alert" aria-hidden="true" onclick="$(\'' + id + '\').toggleClass(\'in\');">'+
+        '×</button>' + text + '</div>';
+    $(require).appendTo('body');
+    $('#login-required').toggleClass('in');
+}
+
 function requireLogin() {
     console.log(Cookies.get("username"));
     if (!hasLogin()) {
-        var require = '<div id="login-required" class="alert alert-warning alert-dismissable flyover">' +
-            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true" onclick="$(\'#login-required\').toggleClass(\'in\');">'+
-            '×</button><strong>Warning!</strong> You are not logged in and tried to access a secured resource.</div>';
-        $(require).appendTo('body');
-        $('#login-required').toggleClass('in');
+        spawnRibbon('login-required', 'warning', '<strong>Warning!</strong> You are not logged in and tried to access a secured resource.');
+        return false;
     }
+    return true;
 }
 
 function hasLogin() {
@@ -108,7 +114,7 @@ function collectData() {
             });
         if(strReturn['status'] == "OK") {
             if (strReturn['results'].length > 1) {
-                // @Todo: Fehlerfall abfangen
+                spawnRibbon('location-too-many', 'alert', 'Die angegebene Adresse wurde zu oft gefunden und wor können dein Studio nicht finden.');
             } else {
                 return {
                     studio_lat: strReturn['results'][0]['geometry']['location']['lat'],
@@ -116,8 +122,7 @@ function collectData() {
                 };
             }
         } else {
-            // @Todo: Fehlerfall abfangen
-            alert("Could not find any locations.");
+            spawnRibbon('location-not-found', 'alert', 'Die Adresse wurde nicht gefunden - bitte überprüfe deine Angaben.');
         }
         console.log(strReturn);
     }
@@ -141,6 +146,10 @@ function collectData() {
         });
         modal.modal();
     }
+}
+
+function clearInput(id) {
+    $(id)[0].reset();
 }
 
 function addStudio(params, callback) {

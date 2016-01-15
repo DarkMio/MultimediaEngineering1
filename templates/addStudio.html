@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Add Example</title>
+    <link rel="stylesheet" href="../css/select2.css">
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/select2.css">
 </head>
 <body>
 <div class="container-fluid">
@@ -164,7 +164,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Ändern</button>
-                <button type="button" class="btn btn-warning" id="add-send">Absenden</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal" id="add-send">Absenden</button>
             </div>
         </div>
 
@@ -200,7 +200,9 @@
             e.preventDefault();
             console.log(params);
             addStudio(params, function() {
-                alert("Success!");
+                spawnRibbon('add-success', 'success', 'Das Studio wurde <strong>erfolgreich</strong> eingetragen!')
+                clearInput('#insert-form');
+                $('#map-modal').modal();
             });
         });
 

@@ -24,16 +24,12 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="row">
         <div class="container">
             <br />
-            <div class="jumbotron">
                 <h1 class="center-block">Gefunded Studios</h1>
                 <br />
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
-                ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo
-                dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor
-                sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
-                tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
                 <table class="table table-striped table-hover" id="tattoo-table">
                     <thead>
                         <tr>
@@ -47,7 +43,6 @@
                     <tbody id="resultsBody">
                     </tbody>
                 </table>
-            </div>
         </div>
     </div>
 </div>
@@ -93,6 +88,11 @@
                 return;
             }
 
+            // Clear out the old markers.
+            markers.forEach(function(marker) {
+                marker.setMap(null);
+            });
+            markers = [];
             // dispatch the request and get the studios.
             var mainLocation = searchBox.getPlaces()[0].geometry.location;
             findStudios(mainLocation.lng(), mainLocation.lat(), 50, function(response) {
@@ -116,11 +116,6 @@
                 }
                 console.log(response);
             });
-            // Clear out the old markers.
-            markers.forEach(function(marker) {
-                marker.setMap(null);
-            });
-            markers = [];
 
             // For each place, get the icon, name and location.
             var bounds = new google.maps.LatLngBounds();

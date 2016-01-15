@@ -29,6 +29,9 @@ body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
 }
+.navbar {
+    margin-bottom: 0;
+}
 .footer {
     position: absolute;
     bottom: 0;
@@ -49,5 +52,4 @@ body {
 }
 .flyover.in {
     margin-top: 150px;
-
 }

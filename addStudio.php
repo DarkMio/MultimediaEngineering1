@@ -3,10 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Add Example</title>
-    <link rel="stylesheet" href="../../static/css/select2.css">
-    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../static/css/style.css">
-    <link rel="stylesheet" href="../../static/css/select2-bootstrap.css">
+    <link rel="stylesheet" href="static/css/select2.css">
+    <link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="static/css/select2-bootstrap.css">
+</head>
+<body>
+<?php include 'header.php'; ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Example</title>
+    <link rel="stylesheet" href="../../css/select2.css">
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/select2-bootstrap.css">
 </head>
 <body>
 <div class="container-fluid">
@@ -173,12 +185,10 @@
 </div>
 
 </body>
-<script src="../../static/js/jquery-1.11.3.min.js"></script>
-<script src="../../static/js/js.cookie.js"></script>
-<script src="../../static/js/select2.full.min.js"></script>
-<script src="../../static/js/request_implementation.js"></script>
-<script src="../../static/bootstrap/js/bootstrap.min.js"></script>
-<script src="../../static/bootstrap/js/transition.js"></script>
+<?php include 'footer.php'; ?>
+</body>
+<script src="./static/js/select2.full.min.js"></script>
+<script src="static/bootstrap/js/transition.js"></script>
 <script src='https://www.google.com/recaptcha/api.js'></script>
 <script src="https://maps.googleapis.com/maps/api/js"></script>
 <script>

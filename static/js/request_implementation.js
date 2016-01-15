@@ -30,7 +30,6 @@ function spawnRibbon(id, type, text) {
 }
 
 function requireLogin() {
-    console.log(Cookies.get("username"));
     if (!hasLogin()) {
         spawnRibbon('login-required', 'warning', '<strong>Warning!</strong> You are not logged in and tried to access a secured resource.');
         return false;
@@ -64,7 +63,6 @@ function login(username, password, callback) {
 }
 
 function showStaged(username, token, callback){
-    console.log(username);
     getRequest(api_url + "showStaged", {username: username, token:token}, function data (response){
         callback(response);
     })
@@ -79,7 +77,6 @@ function deleteStaged(id) {
 
 function acceptStaged(id) {
     var params = $.extend({}, getLogin(), {id: id});
-    console.log(params);
     getRequest(api_url + "acceptStaged", params, function(){});
     $('#staged-' + id).addClass("success");
 }
@@ -156,7 +153,6 @@ function collectData() {
         } else {
             spawnRibbon('location-not-found', 'alert', 'Die Adresse wurde nicht gefunden - bitte überprüfe deine Angaben.');
         }
-        console.log(strReturn);
     }
 
     function modalMap(long, lat) {

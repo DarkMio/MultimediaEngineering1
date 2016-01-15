@@ -342,7 +342,7 @@ class DatabaseInterface
     SELECT id, studio_name, address, studio_type, owner, creator, phone, created FROM studios_staging WHERE id = ?
     ";
 
-    protected $DELETE_STAGED = "DELETE FROM studios_Staging WHERE id = ?";
+    protected $DELETE_STAGED = "DELETE FROM studios_staging WHERE id = ?";
 
     protected $INSERT_FIRST_RATING = "
         INSERT INTO studio_ratings(studio, count, avg)

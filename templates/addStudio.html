@@ -133,8 +133,8 @@
                     <div class="row">
                         <label for="owner-phone" class="col-lg-2 control-label"></label>
                         <div class="col-lg-10">
-                            <button type="reset" class="btn btn-warning">Reset</button>
-                            <button type="submit" class="btn btn-primary submit" value="send">Absenden</button>
+                            <button type="reset" class="btn btn-danger">Reset</button>
+                            <button type="submit" class="btn btn-warning submit" value="send" id="form-submit" data-toggle="modal">Absenden</button>
                             <p>
                                 <small>Felder mit einer <span class="text-danger">*</span> Makierung sind Pflichtfelder.
                                 </small>
@@ -149,6 +149,28 @@
         </div>
     </div>
 </div>
+
+<div id="map-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Bitte die Adresse bestätigen!</h4>
+            </div>
+            <div class="modal-body">
+                <div id="map_wrapper" style="display: block;">
+                    <div id="map" style="width:870px;height:400px"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Ändern</button>
+                <button type="button" class="btn btn-warning" id="add-send">Absenden</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 </body>
 <script src="../static/js/jquery-1.11.3.min.js"></script>
 <script src="../static/js/js.cookie.js"></script>
@@ -157,8 +179,10 @@
 <script src="../bootstrap/js/bootstrap.min.js"></script>
 <script src="../bootstrap/js/transition.js"></script>
 <script src='https://www.google.com/recaptcha/api.js'></script>
+<script src="https://maps.googleapis.com/maps/api/js"></script>
 <script>
     $(function () {
+        var params;
         $("#owner-info").change(function () {
             if ($(this).val().indexOf("withAddress") != -1) {
                 $('#userInfo').collapse('show');
@@ -169,8 +193,17 @@
 
         $("#insert-form").submit(function (e) {
             e.preventDefault();
-            insertFormRequest();
+            params = collectData();
         });
+
+        $("#add-send").click(function (e) {
+            e.preventDefault();
+            console.log(params);
+            addStudio(params, function() {
+                alert("Success!");
+            });
+        });
+
         var $ajax = $("#studio-zip");
 
         $ajax.select2({
@@ -212,68 +245,6 @@
             console.log(zips.name);
             return zips.id;
         }
-
-
-        function formatRepo (repo) {
-            if (repo.loading) return repo.text;
-
-            var markup = "<div class='select2-result-repository clearfix'>" +
-                    "<div class='select2-result-repository__avatar'><img src='" + repo.owner + "' /></div>" +
-                    "<div class='select2-result-repository__meta'>" +
-                    "<div class='select2-result-repository__title'>" + repo.location + "</div>";
-
-            if (repo.description) {
-                markup += "<div class='select2-result-repository__description'>" + repo.zip + "</div>";
-            }
-
-            markup += "<div class='select2-result-repository__statistics'>" +
-                    "<div class='select2-result-repository__forks'><i class='fa fa-flash'></i> " + repo.forks_count + " Forks</div>" +
-                    "<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> " + repo.stargazers_count + " Stars</div>" +
-                    "<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i> " + repo.watchers_count + " Watchers</div>" +
-                    "</div>" +
-                    "</div></div>";
-
-            return markup;
-        }
-
-        function formatRepoSelection (repo) {
-            return repo.full_name || repo.text;
-        }
-/*
-        var $ajax = $("#studio-zip");
-
-        $ajax.select2({
-            ajax: {
-                url: "https://api.github.com/search/repositories",
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        q: params.term, // search term
-                        page: params.page
-                    };
-                },
-                processResults: function (data, params) {
-                    // parse the results into the format expected by Select2
-                    // since we are using custom formatting functions we do not need to
-                    // alter the remote JSON data, except to indicate that infinite
-                    // scrolling can be used
-                    params.page = params.page || 1;
-
-                    return {
-                        results: data.items,
-                        pagination: {
-                            more: (params.page * 30) < data.total_count
-                        }
-                    };
-                },
-                cache: true
-            },
-            escapeMarkup: function (markup) { return markup; },
-            minimumInputLength: 1,
-            templateResult: formatRepo,
-            templateSelection: formatRepoSelection
-        });*/
     });
 </script>
 </html>

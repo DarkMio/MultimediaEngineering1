@@ -59,10 +59,15 @@ function showStaged(username, token, callback){
     })
 }
 
-function insertFormRequest() {
+function collectData() {
     var input = collectInput();
     var params = $.extend({}, input, getLogin());
-    getRequest(api_url + "addStudio", params, callback());
+    params = $.extend({}, params, getLongLat(params));
+    modalMap(params['studio_long'], params['studio_lat']);
+    return params;
+
+    // getRequest(api_url + "addStudio", params, callback);
+
 
     function collectInput() { // cleans up empty fields on its own.
         var studio = inputHelper('studio');
@@ -88,8 +93,56 @@ function insertFormRequest() {
         return dict;
     }
 
-    function callback() { // heck, why not nesting the callback as well when we're at it.
-        console.log("I am the callback of insertFormRequest.")
+    function getLongLat(params) {
+        var address = params['studio_street_name'] + ' ' + params['studio_street_nr'] + ', ' + params['studio_zip'] + ' ' +
+                params['studio_location'];
+        jQuery.ajax({
+                url: "https://maps.googleapis.com/maps/api/geocode/json",
+                data: {
+                    address: address,
+                    region: 'de'
+                },
+                dataType: 'json',
+                async: false,
+                success: function(html) {strReturn = html}
+            });
+        if(strReturn['status'] == "OK") {
+            if (strReturn['results'].length > 1) {
+                // @Todo: Fehlerfall abfangen
+            } else {
+                return {
+                    studio_lat: strReturn['results'][0]['geometry']['location']['lat'],
+                    studio_long: strReturn['results'][0]['geometry']['location']['lng']
+                };
+            }
+        } else {
+            // @Todo: Fehlerfall abfangen
+            alert("Could not find any locations.");
+        }
+        console.log(strReturn);
+    }
+
+    function modalMap(long, lat) {
+        var mapCanvas = document.getElementById('map');
+        var mapOptions = {
+            center: new google.maps.LatLng(lat, long),
+            zoom: 11,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(mapCanvas, mapOptions);
+        var modal = $('#map-modal');
+        modal.on("shown.bs.modal", function() {
+            google.maps.event.trigger(map, 'resize');
+            map.setCenter(new google.maps.LatLng(lat, long));
+            var marker = new google.maps.Marker({
+                position: {lat: lat, lng: long},
+                map: map
+            })
+        });
+        modal.modal();
     }
 }
 
+function addStudio(params, callback) {
+    getRequest(api_url + "addStudio", params, callback);
+}

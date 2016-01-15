@@ -307,8 +307,8 @@ class DatabaseInterface
                     pt.person_name, pt.description*/
                 $single["owner"] = $this->map_response_single(["id", "first_name", "last_name",
                     "street_name", "street_nr", "zip", "location", "lat", "long", "type", "description"], $res);
-                $return_val[] = $single;
             }
+            $return_val[] = $single;
         }
         return $return_val;
     }

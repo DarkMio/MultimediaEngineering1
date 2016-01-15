@@ -46,22 +46,26 @@
         var table = $('#staging-table').find("tbody:last");
         $.each(response["response"], function(key, value) {
             console.log(value);
-            table.append(
-                    "<tr>" +
+            var result = "";
+            result +=   "<tr>" +
                         "<td class=\"hidden-xs\"><label><input type=\"checkbox\"></label></td>" +
                         "<td>" + value["id"] + "</td>" +
                         "<td>" + value["name"] + "</td>" +
                         "<td>" + value["street"] + " " + value["street_nr"] + "</td>" +
                         "<td>" + value["zip"] + " " + value["location"] +  "</td>" +
-                        "<td>" + value["phone"] + "</td>" +
-                        "<td>" + value["owner"]["first_name"] + " " + value["owner"]["last_name"] +"</td>" +
-                        "<td>" +
+                        "<td>" + value["phone"] + "</td>"
+            if (value["owner"]) {
+               result += "<td>" + value["owner"]["first_name"] + " " + value["owner"]["last_name"] +"</td>"
+            } else {
+               result += "<td> [No owner] </td>"
+            }
+            result +=   "<td>" +
                             "<span class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span>" +
                             "<span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span>" +
                             "<span class=\"glyphicon glyphicon-refresh\" aria-hidden=\"true\"></span>" +
                             "<span class=\"glyphicon glyphicon-star-empty\" aria-hidden=\"true\"></span>" +
-                        "</td></tr>"
-            )
+                        "</td></tr>";
+            table.append(result);
         })
 })})
 </script>

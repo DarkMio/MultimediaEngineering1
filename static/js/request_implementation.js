@@ -9,6 +9,11 @@ function dumpCookie() {
     console.log(Cookies.get())
 }
 
+function getStudios(long, lat, callback) {
+    var params = {long: long, lat: lat, distance: 50};
+    getRequest(api_url + "findStudios", params, callback);
+}
+
 function getRequest(url, params, callback) {
     $.get(url, params, function(data) {
             callback(data)

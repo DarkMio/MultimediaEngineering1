@@ -26,6 +26,20 @@ class MyAPI extends API
         return parent::verifyKey(2);
     }
 
+    protected function acceptStaged() {
+        parent::verifyKey(2);
+        parent::checkRequest(["id"]);
+        $this->db->accept_staged($this->request["id"]);
+        return ["success" => true];
+    }
+
+    protected function deleteStaged() {
+        parent::verifyKey(2);
+        parent::checkRequest(["id"]);
+        $this->db->delete_staged($this->request["id"]);
+        return ["success" => true];
+    }
+
     protected function findStudios() {
         parent::checkRequest(["long", "lat", "distance"]);
         $offset = "";
@@ -71,6 +85,12 @@ class MyAPI extends API
             $into_live = isset($r["force"]);
         } catch (Exception $e) {
             $into_live = false;
+        }
+
+        if(!isset($r["captcha"])) {
+            throw new Exception("The captcha was not validated!");
+        } else {
+            parent::verifyCaptcha($r["captcha"]);
         }
 
         parent::checkRequest(["studio_street_nr", "studio_name", "studio_type",

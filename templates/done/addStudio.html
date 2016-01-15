@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Add Example</title>
-    <link rel="stylesheet" href="../css/select2.css">
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../../css/select2.css">
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/select2-bootstrap.css">
 </head>
 <body>
 <div class="container-fluid">
@@ -172,12 +173,12 @@
 </div>
 
 </body>
-<script src="../static/js/jquery-1.11.3.min.js"></script>
-<script src="../static/js/js.cookie.js"></script>
-<script src="../static/js/select2.full.min.js"></script>
-<script src="../static/js/request_implementation.js"></script>
-<script src="../bootstrap/js/bootstrap.min.js"></script>
-<script src="../bootstrap/js/transition.js"></script>
+<script src="../../static/js/jquery-1.11.3.min.js"></script>
+<script src="../../static/js/js.cookie.js"></script>
+<script src="../../static/js/select2.full.min.js"></script>
+<script src="../../static/js/request_implementation.js"></script>
+<script src="../../bootstrap/js/bootstrap.min.js"></script>
+<script src="../../bootstrap/js/transition.js"></script>
 <script src='https://www.google.com/recaptcha/api.js'></script>
 <script src="https://maps.googleapis.com/maps/api/js"></script>
 <script>
@@ -202,13 +203,14 @@
             addStudio(params, function() {
                 spawnRibbon('add-success', 'success', 'Das Studio wurde <strong>erfolgreich</strong> eingetragen!')
                 clearInput('#insert-form');
-                $('#map-modal').modal();
+                $('#map-modal').modal("hide");
             });
         });
 
         var $ajax = $("#studio-zip");
 
         $ajax.select2({
+            theme: "bootstrap",
             // placeholder: "Plz", // - seems to be buggy.
             ajax: {
                 url: api_url + "hintLocations",

@@ -40,14 +40,17 @@
 <script src="../../static/js/request_implementation.js"></script>
 <script src="../../bootstrap/js/bootstrap.min.js"></script>
 <script src="../../static/js/js.cookie.js"></script>
-<script> $(function(){
+<script>
+    $(function(){
     requireLogin();
     showStaged(Cookies.get("username"), Cookies.get("token"), function(response) {
         var table = $('#staging-table').find("tbody:last");
         $.each(response["response"], function(key, value) {
             console.log(value);
             var result = "";
-            result +=   "<tr>" +
+            var api_delete = api_url + "deleteStaged?id=";
+            var api_accept = api_url + "acceptStaged?id=";
+            result +=   "<tr id='staged-" + value["id"] + "'>" +
                         "<td class=\"hidden-xs\"><label><input type=\"checkbox\"></label></td>" +
                         "<td>" + value["id"] + "</td>" +
                         "<td>" + value["name"] + "</td>" +
@@ -60,9 +63,8 @@
                result += "<td> [No owner] </td>"
             }
             result +=   "<td>" +
-                            "<span class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span>" +
-                            "<span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span>" +
-                            "<span class=\"glyphicon glyphicon-refresh\" aria-hidden=\"true\"></span>" +
+                            "<a onClick=\"acceptStaged(" + value['id'] + ")\"><span class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span></a>" +
+                            "<a onClick=\"deleteStaged(" + value['id'] + ")\"><span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
                             "<span class=\"glyphicon glyphicon-star-empty\" aria-hidden=\"true\"></span>" +
                         "</td></tr>";
             table.append(result);

@@ -17,11 +17,11 @@ function getRequest(url, params, callback) {
 }
 
 function spawnRibbon(id, type, text) {
-    var require = '<div id="' + id + '" class="alert alert-warning alert-dismissable flyover">' +
+    var require = '<div id="' + id + '" class="alert alert-' + type + ' alert-dismissable flyover">' +
         '<button type="button" class="close" data-dismiss="alert" aria-hidden="true" onclick="$(\'' + id + '\').toggleClass(\'in\');">'+
         '×</button>' + text + '</div>';
     $(require).appendTo('body');
-    $('#login-required').toggleClass('in');
+    $('#' + id).toggleClass('in');
 }
 
 function requireLogin() {
@@ -65,7 +65,24 @@ function showStaged(username, token, callback){
     })
 }
 
+
+function deleteStaged(id) {
+    var params = $.extend({}, getLogin(), {id: id});
+    getRequest(api_url + "deleteStaged", params, function(){});
+    $('#staged-' + id).addClass("danger");
+}
+
+function acceptStaged(id) {
+    var params = $.extend({}, getLogin(), {id: id});
+    console.log(params);
+    getRequest(api_url + "acceptStaged", params, function(){});
+    $('#staged-' + id).addClass("success");
+}
+
 function collectData() {
+    if(!checkCaptcha()) {
+        return;
+    }
     var input = collectInput();
     var params = $.extend({}, input, getLogin());
     params = $.extend({}, params, getLongLat(params));
@@ -74,12 +91,22 @@ function collectData() {
 
     // getRequest(api_url + "addStudio", params, callback);
 
+    function checkCaptcha() {
+        var captcha = grecaptcha.getResponse();
+        if(captcha.length == 0) {
+            spawnRibbon('captcha-fail', 'danger', 'Du hast das <strong>Captcha</strong> nicht bestätigt!');
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     function collectInput() { // cleans up empty fields on its own.
         var studio = inputHelper('studio');
         studio['studio_type'] = $('#studio-type').val();
         var owner = inputHelper('owner');
-        var packed = $.extend({}, studio, owner);
+        var captcha = {captcha: grecaptcha.getResponse()};
+        var packed = $.extend({}, studio, owner, captcha);
         $.each(packed, function(key, value) { // cleans up all empty fields.
             if (value == "") {
                 delete packed[key];
@@ -131,7 +158,7 @@ function collectData() {
         var mapCanvas = document.getElementById('map');
         var mapOptions = {
             center: new google.maps.LatLng(lat, long),
-            zoom: 11,
+            zoom: 12,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         var map = new google.maps.Map(mapCanvas, mapOptions);

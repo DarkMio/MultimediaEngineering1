@@ -323,11 +323,27 @@ class DatabaseInterface
         $this->__dispatch($this->UPDATE_RATING, "i", array(&$studio));
     }
 
+    public function accept_staged($id) {
+        $this->__dispatch($this->MOVE_TO_STUDIOS, "i", array(&$id));
+        $this->delete_staged($id);
+    }
+
+    public function delete_staged($id) {
+        $this->__dispatch($this->DELETE_STAGED, "i", array(&$id));
+    }
+
     /*****************************************************
      * Following are constants containing DB statements. *
      * ------------------------------------------------- *
      * There is no indication of types and security.     *
      *****************************************************/
+    protected $MOVE_TO_STUDIOS = "
+    INSERT INTO studios (id, studio_name, address, studio_type, owner, creator, phone, created)
+    SELECT id, studio_name, address, studio_type, owner, creator, phone, created FROM studios_staging WHERE id = ?
+    ";
+
+    protected $DELETE_STAGED = "DELETE FROM studios_Staging WHERE id = ?";
+
     protected $INSERT_FIRST_RATING = "
         INSERT INTO studio_ratings(studio, count, avg)
         VALUES      (?, 0, 0)

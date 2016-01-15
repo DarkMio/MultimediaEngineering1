@@ -152,6 +152,18 @@ abstract class API
         }
         return $this->db->verifyKey($this->request["token"], $this->request["username"], $role);
     }
+
+    public function verifyCaptcha($captcha) {
+        $secret = trim(file("secret.txt")[0]);                                                              // read secret key file first line (mostly bc of git)
+        $response =                                                                                         // json decode of google api
+            json_decode(
+                file_get_contents(
+                    "https://www.google.com/recaptcha/api/siteverify?secret=" . $secret . "&response=" .
+                    $captcha . "&remoteip=" . $_SERVER['REMOTE_ADDR']), true);
+        if ($response['success'] == false) {                                                                // if verification failed
+            throw new Exception("User captcha is invalid!");
+        }
+    }
 }
 
 class APIException extends \Exception
